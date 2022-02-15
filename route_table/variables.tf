@@ -9,7 +9,7 @@ variable "location" {
 }
 
 variable "name" {
-  description = "The virtual network's name"
+  description = "The route table's name"
   type        = string
 }
 
