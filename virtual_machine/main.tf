@@ -47,7 +47,7 @@ resource "azurerm_virtual_machine" "virtual_machine" {
     content {
       computer_name  = os_profile.value.computer_name
       admin_username = os_profile.value.admin_username
-      admin_password = coalesce(os_profile.value.admin_password, var.default_admin_password)
+      admin_password = os_profile.value.admin_password
     }
   }
 

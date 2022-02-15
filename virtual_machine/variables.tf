@@ -41,8 +41,3 @@ variable "os_profile" {
     admin_password = string
   })
 }
-
-variable "default_admin_password" {
-  description = "The virtual machine's default admin password"
-  type        = string
-}
