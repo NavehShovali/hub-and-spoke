@@ -9,18 +9,18 @@ variable "location" {
 }
 
 variable "name" {
-  description = "The virtual network's name"
+  description = "The storage account's name"
   type        = string
 }
 
 variable "account_replication_type" {
   description = "Defines the type of replication to use for the storage account"
-  type = string
-  default = "RAGRS"
+  type        = string
+  default     = "RAGRS"
 }
 
 variable "account_tier" {
   description = "Defines the tier to use for the storage account"
-  type = string
-  default = "Standard"
+  type        = string
+  default     = "Standard"
 }
