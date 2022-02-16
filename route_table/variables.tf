@@ -15,12 +15,13 @@ variable "name" {
 
 variable "firewall_internal_ip" {
   description = "The internal IP address of the firewall"
-  type = string
+  type        = string
 }
 
 variable "routes" {
   description = "The route table's route definitions"
-  type        = map(object({
+  type        = list(object({
+    name           = string
     address_prefix = string
   }))
 }
