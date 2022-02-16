@@ -116,3 +116,13 @@ variable "spoke_storage_account" {
     name = string
   })
 }
+
+variable "route_tables" {
+  description = "Defines the spoke's route table"
+  type        = map(object({
+    routes = map(object({
+      address_prefix = string
+    }))
+  }))
+}
+
