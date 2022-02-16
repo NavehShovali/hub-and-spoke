@@ -14,10 +14,9 @@ variable "location" {
 }
 
 variable "security_rules" {
-  type = list(object({
+  type = map(object({
     access                     = string
     direction                  = string
-    name                       = string
     priority                   = number
     protocol                   = string
     source_port_range          = string

@@ -56,10 +56,8 @@ variable "firewall" {
       priority                 = number
       network_rule_collections = map(object({
         action   = string
-        name     = string
         priority = number
         rules    = map(object({
-          name                  = string
           protocols             = list(string)
           source_addresses      = list(string)
           destination_addresses = list(string)
@@ -70,11 +68,11 @@ variable "firewall" {
   })
 }
 
-variable "hub_network_security_group" {
+variable "spoke_network_security_group" {
   description = "Defines the hub's network security group"
   type        = object({
     name           = string
-    security_rules = list(object({
+    security_rules = map(object({
       access                     = string
       direction                  = string
       name                       = string

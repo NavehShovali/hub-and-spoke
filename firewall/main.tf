@@ -34,14 +34,14 @@ resource "azurerm_firewall_policy_rule_collection_group" "rule_collection" {
 
     content {
       action   = network_rule_collection.value["action"]
-      name     = network_rule_collection.value["name"]
+      name     = network_rule_collection.key
       priority = network_rule_collection.value["priority"]
 
       dynamic "rule" {
         for_each = network_rule_collection.value["rules"]
 
         content {
-          name                  = rule.value["name"]
+          name                  = rule.key
           protocols             = rule.value["protocols"]
           source_addresses      = rule.value["source_addresses"]
           destination_addresses = rule.value["destination_addresses"]
