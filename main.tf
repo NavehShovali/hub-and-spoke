@@ -27,6 +27,7 @@ module "hub_virtual_network" {
 locals {
   gateway_subnet_id  = module.hub_virtual_network.subnets[0].id
   firewall_subnet_id = module.hub_virtual_network.subnets[1].id
+  hub_subnet_id      = module.hub_virtual_network.subnets[2].id
 }
 
 module "hub_virtual_private_network_gateway" {
@@ -96,4 +97,28 @@ module "spoke_storage_account" {
   location            = var.location
   name                = var.spoke_storage_account.name
   resource_group_name = azurerm_resource_group.spoke.name
+}
+
+locals {
+  route_tables_associations = {
+    spoke-route-table = [local.spoke_subnet_id]
+    hub-route-table   = [local.hub_subnet_id, local.gateway_subnet_id]
+  }
+
+  route_tables_resource_groups = {
+    spoke-route-table = azurerm_resource_group.spoke.name
+    hub-route-table   = azurerm_resource_group.hub.name
+  }
+}
+
+module "route_tables" {
+  source   = "./route_table"
+  for_each = var.route_tables
+
+  associated_subnets_ids = local.route_tables_associations[each.key]
+  firewall_internal_ip   = module.hub_firewall.internal_ip
+  location               = var.location
+  name                   = each.key
+  resource_group_name    = local.route_tables_resource_groups[each.key]
+  routes                 = each.value["routes"]
 }
