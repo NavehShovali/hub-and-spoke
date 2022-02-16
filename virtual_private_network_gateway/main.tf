@@ -1,5 +1,5 @@
 resource "azurerm_public_ip" "gateway" {
-  allocation_method   = "Static"
+  allocation_method   = "Dynamic"
   location            = var.location
   name                = "${var.name}-public-ip"
   resource_group_name = var.resource_group_name
@@ -9,6 +9,7 @@ resource "azurerm_virtual_hub" "gateway" {
   location            = var.location
   name                = "${var.name}-hub"
   resource_group_name = var.resource_group_name
+  sku = "Standard"
 }
 
 resource "azurerm_vpn_server_configuration" "gateway" {
@@ -28,7 +29,7 @@ resource "azurerm_virtual_network_gateway" "gateway" {
   location            = var.location
   name                = var.name
   resource_group_name = var.resource_group_name
-  sku                 = "VpnGw2"
+  sku                 = "Standard"
   type                = "Vpn"
   vpn_type            = "RouteBased"
   ip_configuration {
