@@ -38,6 +38,11 @@ variable "os_profile" {
   type        = object({
     computer_name  = string
     admin_username = string
-    admin_password = string
   })
+}
+
+variable "admin_password" {
+  description = "Defines the default password to be assigned to the OS profile"
+  type        = string
+  sensitive   = true
 }
