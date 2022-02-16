@@ -20,8 +20,20 @@ variable "address_space" {
 
 variable "subnets" {
   description = "The subnets associated with the virtual network"
-  type        = map(object({
+  type        = list(object({
     name             = string
     address_prefixes = list(string)
   }))
+}
+
+variable "firewall_subnet_address_prefixes" {
+  description = "If not null, a firewall subnet will be created under the virtual network with this address prefixes"
+  type        = list(string)
+  default     = null
+}
+
+variable "gateway_subnet_address_prefixes" {
+  description = "If not null, a gateway subnet will be created under the virtual network with this address prefixes"
+  type        = list(string)
+  default     = null
 }
