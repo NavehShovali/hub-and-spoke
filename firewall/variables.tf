@@ -24,10 +24,8 @@ variable "policy_rule_collection_groups" {
     priority                 = number
     network_rule_collections = map(object({
       action   = string
-      name     = string
       priority = number
       rules    = map(object({
-        name                  = string
         protocols             = list(string)
         source_addresses      = list(string)
         destination_addresses = list(string)

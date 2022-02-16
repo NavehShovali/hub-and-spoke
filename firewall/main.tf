@@ -3,6 +3,7 @@ resource "azurerm_public_ip" "public_ip" {
   location            = var.location
   name                = "${var.name}-public-ip"
   resource_group_name = var.resource_group_name
+  sku                 = "Standard"
 }
 
 resource "azurerm_firewall" "firewall" {
@@ -33,19 +34,19 @@ resource "azurerm_firewall_policy_rule_collection_group" "rule_collection" {
     for_each = each.value.network_rule_collections
 
     content {
-      action   = network_rule_collection.value["action"]
+      action   = network_rule_collection.value.action
       name     = network_rule_collection.key
-      priority = network_rule_collection.value["priority"]
+      priority = network_rule_collection.value.priority
 
       dynamic "rule" {
-        for_each = network_rule_collection.value["rules"]
+        for_each = network_rule_collection.value.rules
 
         content {
           name                  = rule.key
-          protocols             = rule.value["protocols"]
-          source_addresses      = rule.value["source_addresses"]
-          destination_addresses = rule.value["destination_addresses"]
-          destination_ports     = rule.value["destination_ports"]
+          protocols             = rule.value.protocols
+          source_addresses      = rule.value.source_addresses
+          destination_addresses = rule.value.destination_addresses
+          destination_ports     = rule.value.destination_ports
         }
       }
     }
