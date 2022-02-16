@@ -7,7 +7,7 @@ resource "azurerm_route_table" "route_table" {
     for_each = var.routes
     content {
       address_prefix         = route.value.address_prefix
-      name                   = route.value.name
+      name                   = route.key
       next_hop_type          = route.value.next_hop_type
       next_hop_in_ip_address = route.value.next_hop_in_ip_address
     }
