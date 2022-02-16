@@ -68,9 +68,9 @@ module "spoke_network_security_group" {
   source = "./network_security_group"
 
   location            = var.location
-  name                = "${local.resource_prefix}-${var.hub_network_security_group}"
+  name                = "${local.resource_prefix}-${var.spoke_network_security_group}"
   resource_group_name = azurerm_resource_group.spoke.name
-  security_rules      = var.hub_network_security_group.security_rules
+  security_rules      = var.spoke_network_security_group.security_rules
 }
 
 resource "azurerm_subnet_network_security_group_association" "spoke" {
