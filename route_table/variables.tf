@@ -21,7 +21,7 @@ variable "firewall_internal_ip" {
 variable "routes" {
   description = "The route table's route definitions"
   type        = map(object({
-    address_prefix         = string
+    address_prefix = string
   }))
 }
 
