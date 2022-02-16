@@ -9,3 +9,8 @@ output "name" {
 output "data" {
   value = azurerm_firewall.firewall
 }
+
+output "internal_ip" {
+  value = azurerm_firewall.firewall.ip_configuration.private_ip_address
+}
+
