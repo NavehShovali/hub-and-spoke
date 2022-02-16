@@ -75,7 +75,6 @@ variable "spoke_network_security_group" {
     security_rules = map(object({
       access                     = string
       direction                  = string
-      name                       = string
       priority                   = number
       protocol                   = string
       source_port_range          = string
@@ -117,12 +116,24 @@ variable "spoke_storage_account" {
   })
 }
 
-variable "route_tables" {
+variable "spoke_route_table" {
   description = "Defines the spoke's route table"
-  type        = map(object({
-    routes = map(object({
+  type        = object({
+    name   = string
+    routes = list(object({
+      name           = string
       address_prefix = string
     }))
-  }))
+  })
 }
 
+variable "hub_route_table" {
+  description = "Defines the spoke's route table"
+  type        = object({
+    name   = string
+    routes = list(object({
+      name           = string
+      address_prefix = string
+    }))
+  })
+}

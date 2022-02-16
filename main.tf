@@ -15,19 +15,19 @@ resource "azurerm_resource_group" "spoke" {
 module "hub_virtual_network" {
   source = "./virtual_network"
 
-  address_space       = var.hub_virtual_network.address_space
-  location            = var.location
-  name                = "${local.resource_prefix}-${var.hub_virtual_network.name}"
-  resource_group_name = azurerm_resource_group.hub.name
-  subnets             = concat([
-    var.virtual_private_network_gateway.subnet, var.firewall.subnet
-  ], var.hub_virtual_network.subnets)
+  address_space                    = var.hub_virtual_network.address_space
+  location                         = var.location
+  name                             = "${local.resource_prefix}-${var.hub_virtual_network.name}"
+  resource_group_name              = azurerm_resource_group.hub.name
+  subnets                          = var.hub_virtual_network.subnets
+  firewall_subnet_address_prefixes = var.firewall.subnet.address_prefixes
+  gateway_subnet_address_prefixes = var.virtual_private_network_gateway.subnet.address_prefixes
 }
 
 locals {
-  gateway_subnet_id  = module.hub_virtual_network.subnets[0].id
-  firewall_subnet_id = module.hub_virtual_network.subnets[1].id
-  hub_subnet_id      = module.hub_virtual_network.subnets[2].id
+  hub_subnet_id      = module.hub_virtual_network.subnets[0].id
+  gateway_subnet_id  = module.hub_virtual_network.gateway_subnet_id
+  firewall_subnet_id = module.hub_virtual_network.firewall_subnet_id
 }
 
 module "hub_virtual_private_network_gateway" {
@@ -69,14 +69,14 @@ module "spoke_network_security_group" {
   source = "./network_security_group"
 
   location            = var.location
-  name                = "${local.resource_prefix}-${var.spoke_network_security_group}"
+  name                = "${local.resource_prefix}-${var.spoke_network_security_group.name}"
   resource_group_name = azurerm_resource_group.spoke.name
   security_rules      = var.spoke_network_security_group.security_rules
 }
 
 resource "azurerm_subnet_network_security_group_association" "spoke" {
-  network_security_group_id = module.spoke_network_security_group
-  subnet_id                 = local.spoke_subnet_id.id
+  network_security_group_id = module.spoke_network_security_group.id
+  subnet_id                 = local.spoke_subnet_id
 }
 
 module "spoke_virtual_machine" {
@@ -89,6 +89,7 @@ module "spoke_virtual_machine" {
   storage_image_reference = var.spoke_virtual_machine.storage_image_reference
   subnet_id               = local.spoke_subnet_id
   vm_size                 = var.spoke_virtual_machine.vm_size
+  admin_password          = var.virtual_machine_password
 }
 
 module "spoke_storage_account" {
@@ -99,26 +100,24 @@ module "spoke_storage_account" {
   resource_group_name = azurerm_resource_group.spoke.name
 }
 
-locals {
-  route_tables_associations = {
-    spoke-route-table = [local.spoke_subnet_id]
-    hub-route-table   = [local.hub_subnet_id, local.gateway_subnet_id]
-  }
+module "hub_route_table" {
+  source = "./route_table"
 
-  route_tables_resource_groups = {
-    spoke-route-table = azurerm_resource_group.spoke.name
-    hub-route-table   = azurerm_resource_group.hub.name
-  }
-}
-
-module "route_tables" {
-  source   = "./route_table"
-  for_each = var.route_tables
-
-  associated_subnets_ids = local.route_tables_associations[each.key]
+  associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
   location               = var.location
-  name                   = each.key
-  resource_group_name    = local.route_tables_resource_groups[each.key]
-  routes                 = each.value["routes"]
+  name                   = "${local.resource_prefix}-${var.hub_route_table.name}"
+  resource_group_name    = azurerm_resource_group.hub.name
+  routes                 = var.hub_route_table.routes
+}
+
+module "spoke_route_table" {
+  source = "./route_table"
+
+  associated_subnets_ids = [local.spoke_subnet_id]
+  firewall_internal_ip   = module.hub_firewall.internal_ip
+  location               = var.location
+  name                   = "${local.resource_prefix}-${var.spoke_route_table.name}"
+  resource_group_name    = azurerm_resource_group.spoke.name
+  routes                 = var.spoke_route_table.routes
 }
