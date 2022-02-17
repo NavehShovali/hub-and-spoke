@@ -21,13 +21,42 @@ module "hub_virtual_network" {
   resource_group_name              = azurerm_resource_group.hub.name
   subnets                          = var.hub_virtual_network.subnets
   firewall_subnet_address_prefixes = var.firewall.subnet.address_prefixes
-  gateway_subnet_address_prefixes = var.virtual_private_network_gateway.subnet.address_prefixes
+  gateway_subnet_address_prefixes  = var.virtual_private_network_gateway.subnet.address_prefixes
+}
+
+module "spoke_virtual_network" {
+  source = "./virtual_network"
+
+  address_space       = var.spoke_virtual_network.address_space
+  location            = var.location
+  name                = "${local.resource_prefix}-${var.spoke_virtual_network.name}"
+  resource_group_name = azurerm_resource_group.spoke.name
+  subnets             = var.spoke_virtual_network.subnets
 }
 
 locals {
   hub_subnet_id      = module.hub_virtual_network.subnets[0].id
+  spoke_subnet_id    = module.spoke_virtual_network.subnets[0].id
   gateway_subnet_id  = module.hub_virtual_network.gateway_subnet_id
   firewall_subnet_id = module.hub_virtual_network.firewall_subnet_id
+}
+
+module "peer_spoke_to_hub" {
+  source = "./virtual_network_peering"
+
+  remote_virtual_network_id   = module.hub_virtual_network.id
+  remote_virtual_network_name = var.hub_virtual_network.name
+  resource_group_name         = azurerm_resource_group.spoke.name
+  virtual_network_name        = module.spoke_virtual_network.name
+}
+
+module "peer_hub_to_spoke" {
+  source = "./virtual_network_peering"
+
+  remote_virtual_network_id   = module.spoke_virtual_network.id
+  remote_virtual_network_name = var.spoke_virtual_network.name
+  resource_group_name         = azurerm_resource_group.hub.name
+  virtual_network_name        = module.hub_virtual_network.name
 }
 
 module "hub_virtual_private_network_gateway" {
@@ -49,20 +78,6 @@ module "hub_firewall" {
   policy_rule_collection_groups = var.firewall.policy_rule_collection_groups
   resource_group_name           = azurerm_resource_group.hub.name
   subnet_id                     = local.firewall_subnet_id
-}
-
-module "spoke_virtual_network" {
-  source = "./virtual_network"
-
-  address_space       = var.spoke_virtual_network.address_space
-  location            = var.location
-  name                = "${local.resource_prefix}-${var.spoke_virtual_network.name}"
-  resource_group_name = azurerm_resource_group.spoke.name
-  subnets             = var.spoke_virtual_network.subnets
-}
-
-locals {
-  spoke_subnet_id = module.spoke_virtual_network.subnets[0].id
 }
 
 module "spoke_network_security_group" {
