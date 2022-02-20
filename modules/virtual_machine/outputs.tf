@@ -1,5 +1,5 @@
 output "id" {
-  value = local.virtual_machine == null ? null :local.virtual_machine.id
+  value = local.virtual_machine == null ? null : local.virtual_machine.id
 }
 
 output "name" {
