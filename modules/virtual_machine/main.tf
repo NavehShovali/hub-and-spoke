@@ -76,8 +76,8 @@ resource "azurerm_windows_virtual_machine" "windows_virtual_machine" {
 }
 
 locals {
-  virtual_machine = var.operating_system == coalesce(
+  virtual_machine = coalesce(
     azurerm_linux_virtual_machine.linux_virtual_machine,
     azurerm_windows_virtual_machine.windows_virtual_machine
-  )
+  )[0]
 }
