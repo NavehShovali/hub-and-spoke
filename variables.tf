@@ -32,10 +32,6 @@ variable "virtual_private_network_gateway" {
   type        = object({
     name             = string
     address_prefixes = list(string)
-    subnet           = object({
-      name             = string
-      address_prefixes = list(string)
-    })
     azure_active_directory_authentication = object({
       audience = string
       issuer   = string
@@ -48,10 +44,6 @@ variable "firewall" {
   description = "The firewall to deploy to the hub"
   type        = object({
     name   = string
-    subnet = object({
-      name             = string
-      address_prefixes = list(string)
-    })
     policy_rule_collection_groups = map(object({
       priority                 = number
       network_rule_collections = map(object({

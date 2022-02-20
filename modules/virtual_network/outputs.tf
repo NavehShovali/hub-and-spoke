@@ -11,13 +11,5 @@ output "object" {
 }
 
 output "subnets" {
-  value = values(azurerm_subnet.subnets)
-}
-
-output "firewall_subnet_id" {
-  value = length(azurerm_subnet.firewall_subnet) > 0 ? azurerm_subnet.firewall_subnet[0].id : null
-}
-
-output "gateway_subnet_id" {
-  value = length(azurerm_subnet.gateway_subnet) > 0 ? azurerm_subnet.gateway_subnet[0].id : null
+  value = {for subnet in values(azurerm_subnet.subnets) : subnet.name => subnet}
 }
