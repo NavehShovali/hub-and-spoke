@@ -6,6 +6,6 @@ output "name" {
   value = azurerm_virtual_network_gateway.gateway.name
 }
 
-output "data" {
+output "object" {
   value = azurerm_virtual_network_gateway.gateway
 }

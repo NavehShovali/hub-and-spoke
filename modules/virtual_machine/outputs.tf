@@ -6,6 +6,6 @@ output "name" {
   value = azurerm_virtual_machine.virtual_machine.name
 }
 
-output "data" {
+output "object" {
   value = azurerm_virtual_machine.virtual_machine
 }

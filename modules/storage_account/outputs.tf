@@ -6,6 +6,6 @@ output "name" {
   value = azurerm_storage_account.storage_account.name
 }
 
-output "data" {
+output "object" {
   value = azurerm_storage_account.storage_account
 }
