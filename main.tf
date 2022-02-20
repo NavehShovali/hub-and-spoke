@@ -74,14 +74,22 @@ module "hub_virtual_private_network_gateway" {
   subnet_id                             = local.gateway_subnet_id
 }
 
+module "hub_firewall_policy" {
+  source                        = "modules/firewall_policy"
+  location                      = var.location
+  name                          = "${local.resource_prefix}-${var.firewall.name}"
+  policy_rule_collection_groups = var.firewall.policy_rule_collection_groups
+  resource_group_name           = azurerm_resource_group.hub.name
+}
+
 module "hub_firewall" {
   source = "modules/firewall"
 
   location                      = var.location
   name                          = "${local.resource_prefix}-${var.firewall.name}"
-  policy_rule_collection_groups = var.firewall.policy_rule_collection_groups
   resource_group_name           = azurerm_resource_group.hub.name
   subnet_id                     = local.firewall_subnet_id
+  firewall_policy_id            = module.hub_firewall_policy.id
 }
 
 module "spoke_network_security_group" {
