@@ -20,6 +20,7 @@ variable "subnet_id" {
 
 variable "azure_active_directory_authentication" {
   description = "Azure Active Directory credentials"
+  sensitive   = true
   type        = object({
     audience = string
     issuer   = string
