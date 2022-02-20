@@ -10,7 +10,7 @@ module "hub_virtual_network" {
   location                         = local.location
   name                             = "${local.resource_prefix}-${local.hub_virtual_network.name}"
   resource_group_name              = azurerm_resource_group.hub.name
-  subnets                          = var.hub_virtual_network.subnets
+  subnets                          = local.hub_virtual_network.subnets
 
   depends_on = [azurerm_resource_group.hub]
 }

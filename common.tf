@@ -6,7 +6,7 @@ locals {
       allow_gateway_transit = true
       use_remote_gateways   = false
     }
-    (var.spoke_virtual_network.name) = {
+    (local.spoke_virtual_network.name) = {
       name                  = module.spoke_virtual_network.name
       remote_id             = module.hub_virtual_network.id
       allow_gateway_transit = false

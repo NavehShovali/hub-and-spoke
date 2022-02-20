@@ -82,14 +82,18 @@ locals {
     name           = "spoke-nsg"
     security_rules = {
       allow-ssh = {
-        access                     = "Allow"
-        direction                  = "Inbound"
-        priority                   = 300
-        protocol                   = "TCP"
-        source_port_range          = "*"
-        destination_port_range     = "22"
-        source_address_prefix      = "10.2.0.0/24"
-        destination_address_prefix = "*"
+        access                       = "Allow"
+        direction                    = "Inbound"
+        priority                     = 300
+        protocol                     = "TCP"
+        source_port_range            = "*"
+        destination_port_range       = "22"
+        source_address_prefix        = "10.2.0.0/24"
+        destination_address_prefix   = "*"
+        source_port_ranges           = null
+        destination_port_ranges      = null
+        source_address_prefixes      = null
+        destination_address_prefixes = null
       }
     }
   }
