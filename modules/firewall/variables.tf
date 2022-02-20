@@ -22,3 +22,8 @@ variable "firewall_policy_id" {
   description = "The ID of the firewall policy associated with the firewall"
   type        = string
 }
+
+variable "public_ip_sku" {
+  description = "Defines the SKU of the firewall's public IP resource"
+  default     = "Standard"
+}

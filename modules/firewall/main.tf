@@ -3,7 +3,7 @@ resource "azurerm_public_ip" "public_ip" {
   location            = var.location
   name                = "${var.name}-public-ip"
   resource_group_name = var.resource_group_name
-  sku                 = "Standard"
+  sku                 = var.public_ip_sku
 }
 
 resource "azurerm_firewall" "firewall" {
