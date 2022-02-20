@@ -8,7 +8,7 @@ resource "azurerm_route_table" "route_table" {
     content {
       address_prefix         = route.value.address_prefix
       name                   = route.key
-      next_hop_type          = "VirtualAppliance"
+      next_hop_type          = route.value.next_hop_type
       next_hop_in_ip_address = var.firewall_internal_ip
     }
   }

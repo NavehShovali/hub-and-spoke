@@ -123,6 +123,7 @@ variable "spoke_route_table" {
     routes = list(object({
       name           = string
       address_prefix = string
+      next_hop_type  = string
     }))
   })
 }
@@ -134,6 +135,7 @@ variable "hub_route_table" {
     routes = list(object({
       name           = string
       address_prefix = string
+      next_hop_type  = string
     }))
   })
 }
