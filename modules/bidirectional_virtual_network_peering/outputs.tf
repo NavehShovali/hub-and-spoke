@@ -1,11 +1,11 @@
-output "id" {
-  value = azurerm_virtual_network_peering.peering.id
+output "ids" {
+  value = [for peering in values(azurerm_virtual_network_peering.peerings) : peering.id]
 }
 
-output "name" {
-  value = azurerm_virtual_network_peering.peering.name
+output "names" {
+  value = [for peering in values(azurerm_virtual_network_peering.peerings) : peering.name]
 }
 
-output "object" {
-  value = azurerm_virtual_network_peering.peering
+output "objects" {
+  value = values(azurerm_virtual_network_peering.peerings)
 }
