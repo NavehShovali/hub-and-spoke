@@ -1,11 +1,11 @@
 output "id" {
-  value = azurerm_virtual_machine.virtual_machine.id
+  value = local.virtual_machine == null ? null :local.virtual_machine.id
 }
 
 output "name" {
-  value = azurerm_virtual_machine.virtual_machine.name
+  value = local.virtual_machine == null ? null : local.virtual_machine.name
 }
 
 output "object" {
-  value = azurerm_virtual_machine.virtual_machine
+  value = local.virtual_machine
 }

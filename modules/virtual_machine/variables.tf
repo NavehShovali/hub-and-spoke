@@ -8,6 +8,11 @@ variable "location" {
   type        = string
 }
 
+variable "operating_system" {
+  description = "Defines which virtual machine to deploy. Possible values are `Linux` and `Windows`"
+  type        = string
+}
+
 variable "name" {
   description = "The virtual machine's name"
   type        = string
@@ -33,16 +38,13 @@ variable "storage_image_reference" {
   })
 }
 
-variable "os_profile" {
-  description = "The virtual machine's OS profile"
-  type        = object({
-    computer_name  = string
-    admin_username = string
-  })
-}
-
 variable "admin_password" {
   description = "Defines the default password to be assigned to the OS profile"
   type        = string
   sensitive   = true
+}
+
+variable "admin_username" {
+  description = "Defines the virtual machine's admin username"
+  type        = string
 }
