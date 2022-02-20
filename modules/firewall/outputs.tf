@@ -6,11 +6,10 @@ output "name" {
   value = azurerm_firewall.firewall.name
 }
 
-output "data" {
+output "object" {
   value = azurerm_firewall.firewall
 }
 
 output "internal_ip" {
   value = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
 }
-

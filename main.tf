@@ -13,7 +13,7 @@ resource "azurerm_resource_group" "spoke" {
 }
 
 module "hub_virtual_network" {
-  source = "./virtual_network"
+  source = "modules/virtual_network"
 
   address_space                    = var.hub_virtual_network.address_space
   location                         = var.location
@@ -25,7 +25,7 @@ module "hub_virtual_network" {
 }
 
 module "spoke_virtual_network" {
-  source = "./virtual_network"
+  source = "modules/virtual_network"
 
   address_space       = var.spoke_virtual_network.address_space
   location            = var.location
@@ -42,7 +42,7 @@ locals {
 }
 
 module "peer_spoke_to_hub" {
-  source = "./virtual_network_peering"
+  source = "modules/virtual_network_peering"
 
   remote_virtual_network_id   = module.hub_virtual_network.id
   remote_virtual_network_name = var.hub_virtual_network.name
@@ -53,7 +53,7 @@ module "peer_spoke_to_hub" {
 }
 
 module "peer_hub_to_spoke" {
-  source = "./virtual_network_peering"
+  source = "modules/virtual_network_peering"
 
   remote_virtual_network_id   = module.spoke_virtual_network.id
   remote_virtual_network_name = var.spoke_virtual_network.name
@@ -64,7 +64,7 @@ module "peer_hub_to_spoke" {
 }
 
 module "hub_virtual_private_network_gateway" {
-  source = "./virtual_private_network_gateway"
+  source = "modules/virtual_private_network_gateway"
 
   address_prefixes                      = var.virtual_private_network_gateway.address_prefixes
   azure_active_directory_authentication = var.virtual_private_network_gateway.azure_active_directory_authentication
@@ -75,7 +75,7 @@ module "hub_virtual_private_network_gateway" {
 }
 
 module "hub_firewall" {
-  source = "./firewall"
+  source = "modules/firewall"
 
   location                      = var.location
   name                          = "${local.resource_prefix}-${var.firewall.name}"
@@ -85,7 +85,7 @@ module "hub_firewall" {
 }
 
 module "spoke_network_security_group" {
-  source = "./network_security_group"
+  source = "modules/network_security_group"
 
   location            = var.location
   name                = "${local.resource_prefix}-${var.spoke_network_security_group.name}"
@@ -99,7 +99,7 @@ resource "azurerm_subnet_network_security_group_association" "spoke" {
 }
 
 module "spoke_virtual_machine" {
-  source = "./virtual_machine"
+  source = "modules/virtual_machine"
 
   location                = var.location
   name                    = "${local.resource_prefix}-${var.spoke_virtual_machine.name}"
@@ -112,7 +112,7 @@ module "spoke_virtual_machine" {
 }
 
 module "spoke_storage_account" {
-  source = "./storage_account"
+  source = "modules/storage_account"
 
   location            = var.location
   name                = var.spoke_storage_account.name
@@ -120,7 +120,7 @@ module "spoke_storage_account" {
 }
 
 module "hub_route_table" {
-  source = "./route_table"
+  source = "modules/route_table"
 
   associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
@@ -131,7 +131,7 @@ module "hub_route_table" {
 }
 
 module "spoke_route_table" {
-  source = "./route_table"
+  source = "modules/route_table"
 
   associated_subnets_ids = [local.spoke_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
