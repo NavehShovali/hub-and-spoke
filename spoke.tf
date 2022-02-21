@@ -59,6 +59,7 @@ module "spoke_storage_account" {
   location            = local.location
   name                = local.spoke_storage_account_name
   resource_group_name = azurerm_resource_group.spoke.name
+  subnet_id           = local.spoke_subnet_id
 
   depends_on = [azurerm_resource_group.spoke]
 }

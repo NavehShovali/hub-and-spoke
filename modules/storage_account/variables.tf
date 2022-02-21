@@ -24,3 +24,14 @@ variable "account_tier" {
   type        = string
   default     = "Standard"
 }
+
+variable "subnet_id" {
+  description = "The id of the subnet to connect the private endpoint to"
+  type        = string
+}
+
+variable "connection_subresources_names" {
+  description = "Defines the sub-resources of the private service connection"
+  type        = list(string)
+  default     = ["blob"]
+}
