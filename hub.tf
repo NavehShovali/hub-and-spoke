@@ -6,11 +6,11 @@ resource "azurerm_resource_group" "hub" {
 module "hub_virtual_network" {
   source = "./modules/virtual_network"
 
-  address_space                    = local.hub_virtual_network.address_space
-  location                         = local.location
-  name                             = "${local.resource_prefix}-${local.hub_virtual_network.name}"
-  resource_group_name              = azurerm_resource_group.hub.name
-  subnets                          = local.hub_virtual_network.subnets
+  address_space       = local.hub_virtual_network.address_space
+  location            = local.location
+  name                = "${local.resource_prefix}-${local.hub_virtual_network.name}"
+  resource_group_name = azurerm_resource_group.hub.name
+  subnets             = local.hub_virtual_network.subnets
 
   depends_on = [azurerm_resource_group.hub]
 }
@@ -38,8 +38,12 @@ module "hub_firewall_policy" {
   source                        = "./modules/firewall_policy"
   location                      = local.location
   name                          = "${local.resource_prefix}-${local.firewall_name}"
-  policy_rule_collection_groups = jsondecode(file("./rules/firewall_policies/hub_firewall.json"))
   resource_group_name           = azurerm_resource_group.hub.name
+  policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
+    spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
+    hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
+    hub_gateway_address_prefixes = local.virtual_private_network_gateway.address_prefixes[0]
+  }))
 
   depends_on = [azurerm_resource_group.hub]
 }
@@ -64,7 +68,10 @@ module "hub_route_table" {
   location               = local.location
   name                   = "${local.resource_prefix}-${local.hub_route_table_name}"
   resource_group_name    = azurerm_resource_group.hub.name
-  routes                 = jsondecode(file("./rules/route_tables/hub_route_table.json")).routes
+  routes                 = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
+    spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
+    hub_gateway_subnet_address = local.hub_virtual_network.subnets[1].address_prefixes[0]
+  })).routes
 
   depends_on = [module.hub_firewall]
 }

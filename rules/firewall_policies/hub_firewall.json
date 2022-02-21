@@ -11,10 +11,10 @@
               "TCP"
             ],
             "source_addresses": [
-              "10.1.0.0/16"
+              "${spoke_vnet_address_pool}"
             ],
             "destination_addresses": [
-              "10.0.0.0/16"
+              "${hub_vnet_address_pool}"
             ],
             "destination_ports": [
               "22"
@@ -25,10 +25,10 @@
               "TCP"
             ],
             "source_addresses": [
-              "10.0.0.0/16"
+              "${hub_vnet_address_pool}"
             ],
             "destination_addresses": [
-              "10.1.0.0/16"
+              "${spoke_vnet_address_pool}"
             ],
             "destination_ports": [
               "22"
@@ -39,10 +39,10 @@
               "TCP"
             ],
             "source_addresses": [
-              "10.2.0.0/24"
+              "${hub_gateway_address_prefixes}"
             ],
             "destination_addresses": [
-              "10.0.0.0/16"
+              "${hub_vnet_address_pool}"
             ],
             "destination_ports": [
               "22"
@@ -53,10 +53,10 @@
               "TCP"
             ],
             "source_addresses": [
-              "10.2.0.0/24"
+              "${hub_gateway_address_prefixes}"
             ],
             "destination_addresses": [
-              "10.1.0.0/16"
+              "${spoke_vnet_address_pool}"
             ],
             "destination_ports": [
               "22"

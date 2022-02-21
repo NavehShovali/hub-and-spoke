@@ -7,12 +7,12 @@
     },
     {
       "name": "hub-to-spoke",
-      "address_prefix": "10.0.0.0/16",
+      "address_prefix": "${hub_virtual_network_address}",
       "next_hop_type": "VirtualAppliance"
     },
     {
       "name": "vpn-to-spoke",
-      "address_prefix": "10.2.0.0/24",
+      "address_prefix": "${hub_gateway_address_prefix}",
       "next_hop_type": "VirtualAppliance"
     }
   ]
