@@ -21,7 +21,8 @@ variable "address_space" {
 variable "subnets" {
   description = "The subnets associated with the virtual network"
   type        = list(object({
-    name             = string
-    address_prefixes = list(string)
+    name                                           = string
+    address_prefixes                               = list(string)
+    enforce_private_link_endpoint_network_policies = bool
   }))
 }

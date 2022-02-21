@@ -7,16 +7,19 @@ locals {
     address_space = ["10.0.0.0/16"]
     subnets       = [
       {
-        name             = "default"
-        address_prefixes = ["10.0.0.0/25"]
+        name                                           = "default"
+        address_prefixes                               = ["10.0.0.0/25"]
+        enforce_private_link_endpoint_network_policies = true
       },
       {
-        name             = "GatewaySubnet"
-        address_prefixes = ["10.0.1.0/24"]
+        name                                           = "GatewaySubnet"
+        address_prefixes                               = ["10.0.1.0/24"]
+        enforce_private_link_endpoint_network_policies = true
       },
       {
-        name             = "AzureFirewallSubnet"
-        address_prefixes = ["10.0.0.128/25"]
+        name                                           = "AzureFirewallSubnet"
+        address_prefixes                               = ["10.0.0.128/25"]
+        enforce_private_link_endpoint_network_policies = true
       }
     ]
   }
@@ -26,8 +29,9 @@ locals {
     address_space = ["10.1.0.0/16"]
     subnets       = [
       {
-        name             = "default"
-        address_prefixes = ["10.1.0.0/24"]
+        name                                           = "default"
+        address_prefixes                               = ["10.1.0.0/24"]
+        enforce_private_link_endpoint_network_policies = true
       }
     ]
   }
