@@ -1,11 +1,7 @@
-variable "resource_group_name" {
-  description = "Resource group to deploy to"
-  type        = string
-}
-
 variable "virtual_networks_to_peer" {
   description = "Defines the necessary information about each of the two networks"
   type        = map(object({
+    resource_group_name   = string
     name                  = string
     remote_id             = string
     allow_gateway_transit = bool

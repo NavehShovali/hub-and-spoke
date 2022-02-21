@@ -3,7 +3,7 @@ resource "azurerm_virtual_network_peering" "peerings" {
 
   name                         = "peer-${each.key}"
   remote_virtual_network_id    = each.value.remote_id
-  resource_group_name          = var.resource_group_name
+  resource_group_name          = each.value.resource_group_name
   virtual_network_name         = each.value.name
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
