@@ -17,8 +17,8 @@ module "hub_virtual_network" {
 
 locals {
   hub_subnet_id      = module.hub_virtual_network.subnets["default"].id
-  gateway_subnet_id  = module.hub_virtual_network.subnets["AzureFirewallSubnet"].id
-  firewall_subnet_id = module.hub_virtual_network.subnets["GatewaySubnet"].id
+  gateway_subnet_id  = module.hub_virtual_network.subnets["GatewaySubnet"].id
+  firewall_subnet_id = module.hub_virtual_network.subnets["AzureFirewallSubnet"].id
 }
 
 module "hub_virtual_private_network_gateway" {
@@ -38,7 +38,7 @@ module "hub_firewall_policy" {
   source                        = "./modules/firewall_policy"
   location                      = local.location
   name                          = "${local.resource_prefix}-${local.firewall.name}"
-  policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
+  policy_rule_collection_groups = jsondecode(file("./rules/firewall_policies/hub_firewall.json"))
   resource_group_name           = azurerm_resource_group.hub.name
 
   depends_on = [azurerm_resource_group.hub]
@@ -64,7 +64,7 @@ module "hub_route_table" {
   location               = local.location
   name                   = "${local.resource_prefix}-${local.hub_route_table.name}"
   resource_group_name    = azurerm_resource_group.hub.name
-  routes                 = local.hub_route_table.routes
+  routes                 = jsondecode(file("./rules/route_tables/hub_route_table.json")).routes
 
   depends_on = [module.hub_firewall]
 }

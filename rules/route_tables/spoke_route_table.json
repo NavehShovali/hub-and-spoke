@@ -1,0 +1,19 @@
+{
+  "routes": [
+    {
+      "name": "default-to-firewall",
+      "address_prefix": "0.0.0.0/0",
+      "next_hop_type": "VirtualAppliance"
+    },
+    {
+      "name": "hub-to-spoke",
+      "address_prefix": "10.0.0.0/16",
+      "next_hop_type": "VirtualAppliance"
+    },
+    {
+      "name": "vpn-to-spoke",
+      "address_prefix": "10.2.0.0/24",
+      "next_hop_type": "VirtualAppliance"
+    }
+  ]
+}

@@ -25,7 +25,7 @@ module "spoke_network_security_group" {
   location            = local.location
   name                = "${local.resource_prefix}-${local.spoke_network_security_group.name}"
   resource_group_name = azurerm_resource_group.spoke.name
-  security_rules      = local.spoke_network_security_group.security_rules
+  security_rules      = jsondecode(file("./rules/network_security_groups/spoke_network_security_group.json"))
 
   depends_on = [module.spoke_virtual_network]
 }
@@ -71,7 +71,7 @@ module "spoke_route_table" {
   location               = local.location
   name                   = "${local.resource_prefix}-${local.spoke_route_table.name}"
   resource_group_name    = azurerm_resource_group.spoke.name
-  routes                 = local.spoke_route_table.routes
+  routes                 = jsondecode(file("./rules/route_tables/spoke_route_table.json")).routes
 
   depends_on = [module.hub_firewall]
 }

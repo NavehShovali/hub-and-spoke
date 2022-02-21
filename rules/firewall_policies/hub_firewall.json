@@ -1,0 +1,69 @@
+{
+  "traffic-rule-collection-group": {
+    "priority": 400,
+    "network_rule_collections": {
+      "spoke-traffic": {
+        "action": "Allow",
+        "priority": 410,
+        "rules": {
+          "from-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "10.1.0.0/16"
+            ],
+            "destination_addresses": [
+              "10.0.0.0/16"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "to-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "10.0.0.0/16"
+            ],
+            "destination_addresses": [
+              "10.1.0.0/16"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "vnet-to-hub": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "10.2.0.0/24"
+            ],
+            "destination_addresses": [
+              "10.0.0.0/16"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "vnet-to-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "10.2.0.0/24"
+            ],
+            "destination_addresses": [
+              "10.1.0.0/16"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

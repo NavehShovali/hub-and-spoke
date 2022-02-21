@@ -16,6 +16,9 @@ resource "azurerm_route_table" "route_table" {
 
 resource "azurerm_subnet_route_table_association" "route_table" {
   for_each       = toset(var.associated_subnets_ids)
+
   route_table_id = azurerm_route_table.route_table.id
   subnet_id      = each.key
+
+  depends_on = [azurerm_route_table.route_table]
 }
