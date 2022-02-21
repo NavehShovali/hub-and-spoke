@@ -23,7 +23,7 @@ module "spoke_network_security_group" {
   source = "./modules/network_security_group"
 
   location            = local.location
-  name                = "${local.resource_prefix}-${local.spoke_network_security_group.name}"
+  name                = "${local.resource_prefix}-${local.spoke_network_security_group_name}"
   resource_group_name = azurerm_resource_group.spoke.name
   security_rules      = jsondecode(file("./rules/network_security_groups/spoke_network_security_group.json"))
 
@@ -69,7 +69,7 @@ module "spoke_route_table" {
   associated_subnets_ids = [local.spoke_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
   location               = local.location
-  name                   = "${local.resource_prefix}-${local.spoke_route_table.name}"
+  name                   = "${local.resource_prefix}-${local.spoke_route_table_name}"
   resource_group_name    = azurerm_resource_group.spoke.name
   routes                 = jsondecode(file("./rules/route_tables/spoke_route_table.json")).routes
 

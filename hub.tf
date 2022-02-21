@@ -37,7 +37,7 @@ module "hub_virtual_private_network_gateway" {
 module "hub_firewall_policy" {
   source                        = "./modules/firewall_policy"
   location                      = local.location
-  name                          = "${local.resource_prefix}-${local.firewall.name}"
+  name                          = "${local.resource_prefix}-${local.firewall_name}"
   policy_rule_collection_groups = jsondecode(file("./rules/firewall_policies/hub_firewall.json"))
   resource_group_name           = azurerm_resource_group.hub.name
 
@@ -48,7 +48,7 @@ module "hub_firewall" {
   source = "./modules/firewall"
 
   location            = local.location
-  name                = "${local.resource_prefix}-${local.firewall.name}"
+  name                = "${local.resource_prefix}-${local.firewall_name}"
   resource_group_name = azurerm_resource_group.hub.name
   subnet_id           = local.firewall_subnet_id
   firewall_policy_id  = module.hub_firewall_policy.id
@@ -62,7 +62,7 @@ module "hub_route_table" {
   associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
   location               = local.location
-  name                   = "${local.resource_prefix}-${local.hub_route_table.name}"
+  name                   = "${local.resource_prefix}-${local.hub_route_table_name}"
   resource_group_name    = azurerm_resource_group.hub.name
   routes                 = jsondecode(file("./rules/route_tables/hub_route_table.json")).routes
 

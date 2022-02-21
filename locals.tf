@@ -37,66 +37,9 @@ locals {
     address_prefixes = ["10.2.0.0/24"]
   }
 
-  firewall = {
-    name                          = "hub-firewall"
-    policy_rule_collection_groups = {
-      traffic-rule-collection-group = {
-        priority                 = 400
-        network_rule_collections = {
-          spoke-traffic = {
-            action   = "Allow"
-            priority = 410
-            rules    = {
-              from-spoke = {
-                protocols             = ["TCP"]
-                source_addresses      = ["10.1.0.0/16"]
-                destination_addresses = ["10.0.0.0/16"]
-                destination_ports     = ["22"]
-              }
-              to-spoke = {
-                protocols             = ["TCP"]
-                source_addresses      = ["10.0.0.0/16"]
-                destination_addresses = ["10.1.0.0/16"]
-                destination_ports     = ["22"]
-              }
-              vnet-to-hub = {
-                protocols             = ["TCP"]
-                source_addresses      = ["10.2.0.0/24"]
-                destination_addresses = ["10.0.0.0/16"]
-                destination_ports     = ["22"]
-              }
-              vnet-to-spoke = {
-                protocols             = ["TCP"]
-                source_addresses      = ["10.2.0.0/24"]
-                destination_addresses = ["10.1.0.0/16"]
-                destination_ports     = ["22"]
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+  firewall_name = "hub-firewall"
 
-  spoke_network_security_group = {
-    name           = "spoke-nsg"
-    security_rules = {
-      allow-ssh = {
-        access                       = "Allow"
-        direction                    = "Inbound"
-        priority                     = 300
-        protocol                     = "TCP"
-        source_port_range            = "*"
-        destination_port_range       = "22"
-        source_address_prefix        = "10.2.0.0/24"
-        destination_address_prefix   = "*"
-        source_port_ranges           = null
-        destination_port_ranges      = null
-        source_address_prefixes      = null
-        destination_address_prefixes = null
-      }
-    }
-  }
+  spoke_network_security_group_name = "spoke-nsg"
 
   spoke_virtual_machine = {
     name                    = "spoke-vm"
@@ -113,40 +56,7 @@ locals {
 
   spoke_storage_account_name = "spokestorageaccount"
 
-  spoke_route_table = {
-    name   = "spoke-route-table"
-    routes = [
-      {
-        name           = "default-to-firewall"
-        address_prefix = "0.0.0.0/0"
-        next_hop_type  = "VirtualAppliance"
-      },
-      {
-        name           = "hub-to-spoke"
-        address_prefix = "10.0.0.0/16"
-        next_hop_type  = "VirtualAppliance"
-      },
-      {
-        name           = "vpn-to-spoke"
-        address_prefix = "10.2.0.0/24"
-        next_hop_type  = "VirtualAppliance"
-      }
-    ]
-  }
+  spoke_route_table_name = "spoke-route-table"
 
-  hub_route_table = {
-    name   = "hub-route-table"
-    routes = [
-      {
-        name           = "firewall-route"
-        address_prefix = "10.1.0.0/16"
-        next_hop_type  = "VirtualAppliance"
-      },
-      {
-        name           = "gateway-route"
-        address_prefix = "10.0.1.0/24"
-        next_hop_type  = "VirtualAppliance"
-      }
-    ]
-  }
+  hub_route_table_name = "hub-route-table"
 }
