@@ -1,24 +1,27 @@
 resource "azurerm_public_ip" "public_ip" {
-  allocation_method   = "Static"
-  location            = var.location
   name                = "${var.name}-public-ip"
+  location            = var.location
   resource_group_name = var.resource_group_name
+
+  allocation_method   = "Static"
   sku                 = var.public_ip_sku
 }
 
 module "hub_firewall_policy" {
   source                        = "../firewall_policy"
 
-  location                      = var.location
   name                          = "${var.name}-policy"
+  location                      = var.location
   resource_group_name           = var.resource_group_name
+
   policy_rule_collection_groups = var.policy_rule_collection_groups
 }
 
 resource "azurerm_firewall" "firewall" {
-  location            = var.location
   name                = var.name
+  location            = var.location
   resource_group_name = var.resource_group_name
+
   firewall_policy_id  = module.hub_firewall_policy.id
 
   ip_configuration {

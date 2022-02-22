@@ -1,14 +1,15 @@
 resource "azurerm_firewall_policy" "firewall_policy" {
-  location            = var.location
   name                = var.name
+  location            = var.location
   resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "rule_collection" {
   for_each           = var.policy_rule_collection_groups
-  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
+
   name               = each.key
   priority           = each.value.priority
+  firewall_policy_id = azurerm_firewall_policy.firewall_policy.id
 
   dynamic "network_rule_collection" {
     for_each = each.value.network_rule_collections

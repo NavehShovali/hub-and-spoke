@@ -1,10 +1,11 @@
 resource "azurerm_route_table" "route_table" {
-  location            = var.location
   name                = var.name
+  location            = var.location
   resource_group_name = var.resource_group_name
 
   dynamic "route" {
     for_each = {for route in var.routes : route.name => route}
+
     content {
       address_prefix         = route.value.address_prefix
       name                   = route.key

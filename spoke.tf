@@ -50,10 +50,11 @@ resource "azurerm_resource_group" "spoke" {
 module "spoke_virtual_network" {
   source = "./modules/virtual_network"
 
-  address_space       = local.spoke_virtual_network.address_space
-  location            = local.location
   name                = "${local.environment_prefix}-${local.spoke_virtual_network.name}"
+  location            = local.location
   resource_group_name = azurerm_resource_group.spoke.name
+
+  address_space       = local.spoke_virtual_network.address_space
   subnets             = local.spoke_virtual_network.subnets
 
   depends_on = [azurerm_resource_group.spoke]
@@ -66,9 +67,10 @@ locals {
 module "spoke_network_security_group" {
   source = "./modules/network_security_group"
 
-  location            = local.location
   name                = "${local.environment_prefix}-${local.spoke_network_security_group.name}"
+  location            = local.location
   resource_group_name = azurerm_resource_group.spoke.name
+
   security_rules      = local.spoke_network_security_group.security_rules
   subnet_id           = local.spoke_subnet_id
 
@@ -78,15 +80,17 @@ module "spoke_network_security_group" {
 module "spoke_virtual_machine" {
   source = "./modules/virtual_machine"
 
+  name                    = local.spoke_virtual_machine.name
+  location                = local.location
+  resource_group_name     = azurerm_resource_group.spoke.name
+
+  operating_system        = local.spoke_virtual_machine.operating_system
+  storage_image_reference = local.spoke_virtual_machine.storage_image_reference
+  vm_size                 = local.spoke_virtual_machine.vm_size
+  subnet_id               = local.spoke_subnet_id
+
   admin_password          = var.virtual_machine_admin_password
   admin_username          = local.spoke_virtual_machine.admin_username
-  location                = local.location
-  name                    = local.spoke_virtual_machine.name
-  operating_system        = local.spoke_virtual_machine.operating_system
-  resource_group_name     = azurerm_resource_group.spoke.name
-  storage_image_reference = local.spoke_virtual_machine.storage_image_reference
-  subnet_id               = local.spoke_subnet_id
-  vm_size                 = local.spoke_virtual_machine.vm_size
 
   depends_on = [module.spoke_virtual_network]
 }
@@ -94,8 +98,8 @@ module "spoke_virtual_machine" {
 module "spoke_storage_account" {
   source = "./modules/storage_account"
 
-  location            = local.location
   name                = local.spoke_storage_account_name
+  location            = local.location
   resource_group_name = azurerm_resource_group.spoke.name
 
   depends_on = [azurerm_resource_group.spoke]
@@ -104,10 +108,11 @@ module "spoke_storage_account" {
 module "spoke_storage_account_private_endpoint" {
   source = "./modules/private_endpoint"
 
-  location                       = local.location
   name                           = "${local.spoke_storage_account_name}-private-endpoint"
-  private_connection_resource_id = module.spoke_storage_account.id
+  location                       = local.location
   resource_group_name            = azurerm_resource_group.spoke.name
+
+  private_connection_resource_id = module.spoke_storage_account.id
   subnet_id                      = local.spoke_subnet_id
 
   depends_on = [module.spoke_storage_account]
@@ -116,11 +121,12 @@ module "spoke_storage_account_private_endpoint" {
 module "spoke_route_table" {
   source = "./modules/route_table"
 
+  name                   = "${local.environment_prefix}-${local.spoke_route_table.name}"
+  location               = local.location
+  resource_group_name    = azurerm_resource_group.spoke.name
+
   associated_subnets_ids = [local.spoke_subnet_id]
   firewall_private_ip    = module.hub_firewall.private_ip
-  location               = local.location
-  name                   = "${local.environment_prefix}-${local.spoke_route_table.name}"
-  resource_group_name    = azurerm_resource_group.spoke.name
   routes                 = local.spoke_route_table.routes
 
   depends_on = [module.hub_firewall]

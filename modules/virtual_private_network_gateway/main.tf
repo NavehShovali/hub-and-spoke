@@ -1,14 +1,16 @@
 resource "azurerm_public_ip" "gateway" {
-  allocation_method   = "Dynamic"
-  location            = var.location
   name                = "${var.name}-public-ip"
+  location            = var.location
   resource_group_name = var.resource_group_name
+
+  allocation_method   = "Dynamic"
 }
 
 resource "azurerm_virtual_network_gateway" "gateway" {
-  location                   = var.location
   name                       = var.name
+  location                   = var.location
   resource_group_name        = var.resource_group_name
+
   generation                 = "Generation2"
   sku                        = "VpnGw2"
   type                       = "Vpn"
