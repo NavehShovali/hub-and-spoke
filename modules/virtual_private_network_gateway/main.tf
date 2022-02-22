@@ -3,13 +3,13 @@ resource "azurerm_public_ip" "gateway" {
   location            = var.location
   resource_group_name = var.resource_group_name
 
-  allocation_method   = "Dynamic"
+  allocation_method = "Dynamic"
 }
 
 resource "azurerm_virtual_network_gateway" "gateway" {
-  name                       = var.name
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   generation                 = var.generation
   sku                        = var.sku
