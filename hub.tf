@@ -34,14 +34,6 @@ locals {
       hub_gateway_address_prefixes = local.virtual_private_network_gateway.address_prefixes[0]
     }))
   }
-
-  hub_route_table = {
-    name   = "hub-route-table"
-    routes = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
-      spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
-      hub_gateway_subnet_address    = local.hub_virtual_network.subnets[1].address_prefixes[0]
-    })).routes
-  }
 }
 
 resource "azurerm_resource_group" "hub" {
@@ -56,8 +48,8 @@ module "hub_virtual_network" {
   location            = local.location
   resource_group_name = azurerm_resource_group.hub.name
 
-  address_space       = local.hub_virtual_network.address_space
-  subnets             = local.hub_virtual_network.subnets
+  address_space = local.hub_virtual_network.address_space
+  subnets       = local.hub_virtual_network.subnets
 
   depends_on = [azurerm_resource_group.hub]
 }
@@ -71,9 +63,9 @@ locals {
 module "hub_virtual_private_network_gateway" {
   source = "./modules/virtual_private_network_gateway"
 
-  name                                  = "${local.environment_prefix}-${local.virtual_private_network_gateway.name}"
-  location                              = local.location
-  resource_group_name                   = azurerm_resource_group.hub.name
+  name                = "${local.environment_prefix}-${local.virtual_private_network_gateway.name}"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.hub.name
 
   address_prefixes                      = local.virtual_private_network_gateway.address_prefixes
   azure_active_directory_authentication = var.azure_active_directory_authentication
@@ -85,9 +77,9 @@ module "hub_virtual_private_network_gateway" {
 module "hub_firewall" {
   source = "./modules/firewall"
 
-  name                          = "${local.environment_prefix}-${local.firewall.name}"
-  location                      = local.location
-  resource_group_name           = azurerm_resource_group.hub.name
+  name                = "${local.environment_prefix}-${local.firewall.name}"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.hub.name
 
   subnet_id                     = local.firewall_subnet_id
   policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
@@ -95,15 +87,25 @@ module "hub_firewall" {
   depends_on = [module.hub_virtual_network]
 }
 
+locals {
+  hub_route_table = {
+    name   = "hub-route-table"
+    routes = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
+      spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
+      hub_gateway_subnet_address    = local.hub_virtual_network.subnets[1].address_prefixes[0]
+      firewall_private_ip           = module.hub_firewall.private_ip
+    })).routes
+  }
+}
+
 module "hub_route_table" {
   source = "./modules/route_table"
 
-  name                   = "${local.environment_prefix}-${local.hub_route_table.name}"
-  location               = local.location
-  resource_group_name    = azurerm_resource_group.hub.name
+  name                = "${local.environment_prefix}-${local.hub_route_table.name}"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.hub.name
 
   associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
-  firewall_private_ip    = module.hub_firewall.private_ip
   routes                 = local.hub_route_table.routes
 
   depends_on = [module.hub_firewall]

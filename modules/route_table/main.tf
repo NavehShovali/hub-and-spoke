@@ -10,7 +10,7 @@ resource "azurerm_route_table" "route_table" {
       address_prefix         = route.value.address_prefix
       name                   = route.key
       next_hop_type          = route.value.next_hop_type
-      next_hop_in_ip_address = var.firewall_private_ip
+      next_hop_in_ip_address = route.value.next_hop_in_ip_address
     }
   }
 }

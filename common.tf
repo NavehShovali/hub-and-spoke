@@ -21,11 +21,11 @@ locals {
 }
 
 module "peer_hub_and_spoke" {
-  source                   = "./modules/bidirectional_virtual_network_peering"
+  source = "./modules/bidirectional_virtual_network_peering"
 
   virtual_networks_to_peer = local.virtual_networks_to_peer
 
-  depends_on               = [
+  depends_on = [
     module.hub_virtual_network, module.spoke_virtual_network, module.hub_virtual_private_network_gateway
   ]
 }
