@@ -15,8 +15,7 @@ variable "name" {
 
 variable "routes" {
   description = "The route table's route definitions"
-  type        = list(object({
-    name                   = string
+  type        = map(object({
     address_prefix         = string
     next_hop_type          = string
     next_hop_in_ip_address = string

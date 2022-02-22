@@ -1,22 +1,17 @@
 {
-  "routes": [
-    {
-      "name": "default-to-firewall",
-      "address_prefix": "0.0.0.0/0",
-      "next_hop_type": "VirtualAppliance",
-      "next_hop_in_ip_address": "${firewall_private_ip}"
-    },
-    {
-      "name": "hub-to-spoke",
-      "address_prefix": "${hub_virtual_network_address}",
-      "next_hop_type": "VirtualAppliance",
-      "next_hop_in_ip_address": "${firewall_private_ip}"
-    },
-    {
-      "name": "vpn-to-spoke",
-      "address_prefix": "${hub_gateway_address_prefix}",
-      "next_hop_type": "VirtualAppliance",
-      "next_hop_in_ip_address": "${firewall_private_ip}"
-    }
-  ]
+  "default-to-firewall": {
+    "address_prefix": "0.0.0.0/0",
+    "next_hop_type": "VirtualAppliance",
+    "next_hop_in_ip_address": "${firewall_private_ip}"
+  },
+  "hub-to-spoke": {
+    "address_prefix": "${hub_virtual_network_address}",
+    "next_hop_type": "VirtualAppliance",
+    "next_hop_in_ip_address": "${firewall_private_ip}"
+  },
+  "vpn-to-spoke": {
+    "address_prefix": "${hub_gateway_address_prefix}",
+    "next_hop_type": "VirtualAppliance",
+    "next_hop_in_ip_address": "${firewall_private_ip}"
+  }
 }

@@ -118,7 +118,7 @@ locals {
       hub_virtual_network_address = local.hub_virtual_network.address_space[0]
       hub_gateway_address_prefix  = local.virtual_private_network_gateway.address_prefixes[0]
       firewall_private_ip         = module.hub_firewall.private_ip
-    })).routes
+    }))
   }
 }
 

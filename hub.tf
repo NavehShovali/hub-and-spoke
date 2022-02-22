@@ -96,7 +96,7 @@ locals {
       spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
       hub_gateway_subnet_address    = local.hub_virtual_network.subnets[1].address_prefixes[0]
       firewall_private_ip           = module.hub_firewall.private_ip
-    })).routes
+    }))
   }
 }
 

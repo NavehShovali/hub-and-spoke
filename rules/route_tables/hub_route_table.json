@@ -1,16 +1,12 @@
 {
-  "routes": [
-    {
-      "name": "firewall-route",
-      "address_prefix": "${spoke_virtual_network_address}",
-      "next_hop_type": "VirtualAppliance",
-      "next_hop_in_ip_address": "${firewall_private_ip}"
-    },
-    {
-      "name": "gateway-route",
-      "address_prefix": "${hub_gateway_subnet_address}",
-      "next_hop_type": "VirtualAppliance",
-      "next_hop_in_ip_address": "${firewall_private_ip}"
-    }
-  ]
+  "firewall-route": {
+    "address_prefix": "${spoke_virtual_network_address}",
+    "next_hop_type": "VirtualAppliance",
+    "next_hop_in_ip_address": "${firewall_private_ip}"
+  },
+  "gateway-route": {
+    "address_prefix": "${hub_gateway_subnet_address}",
+    "next_hop_type": "VirtualAppliance",
+    "next_hop_in_ip_address": "${firewall_private_ip}"
+  }
 }
