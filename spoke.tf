@@ -23,11 +23,9 @@ module "spoke_network_security_group" {
   source = "./modules/network_security_group"
 
   location            = local.location
-  name                = "${local.resource_prefix}-${local.spoke_network_security_group_name}"
+  name                = "${local.resource_prefix}-${local.spoke_network_security_group.name}"
   resource_group_name = azurerm_resource_group.spoke.name
-  security_rules      = jsondecode(templatefile("./rules/network_security_groups/spoke_network_security_group.json", {
-    hub_gateway_address_prefix = local.virtual_private_network_gateway.address_prefixes[0]
-  }))
+  security_rules      = local.spoke_network_security_group.security_rules
 
   depends_on = [module.spoke_virtual_network]
 }
@@ -72,12 +70,9 @@ module "spoke_route_table" {
   associated_subnets_ids = [local.spoke_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
   location               = local.location
-  name                   = "${local.resource_prefix}-${local.spoke_route_table_name}"
+  name                   = "${local.resource_prefix}-${local.spoke_route_table.name}"
   resource_group_name    = azurerm_resource_group.spoke.name
-  routes                 = jsondecode(templatefile("./rules/route_tables/spoke_route_table.json", {
-    hub_virtual_network_address = local.hub_virtual_network.address_space[0]
-    hub_gateway_address_prefix  = local.virtual_private_network_gateway.address_prefixes[0]
-  })).routes
+  routes                 = local.spoke_route_table.routes
 
   depends_on = [module.hub_firewall]
 }

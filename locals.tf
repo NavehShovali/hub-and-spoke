@@ -1,6 +1,7 @@
 locals {
-  resource_prefix = "naveh-tf-final"
-  location        = "westeurope"
+  resource_prefix            = "naveh-tf-final"
+  location                   = "westeurope"
+  spoke_storage_account_name = "spokestorageaccount"
 
   hub_virtual_network = {
     name          = "hub-vnet"
@@ -41,9 +42,21 @@ locals {
     address_prefixes = ["10.2.0.0/24"]
   }
 
-  firewall_name = "hub-firewall"
+  firewall = {
+    name                          = "hub-firewall"
+    policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
+      spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
+      hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
+      hub_gateway_address_prefixes = local.virtual_private_network_gateway.address_prefixes[0]
+    }))
+  }
 
-  spoke_network_security_group_name = "spoke-nsg"
+  spoke_network_security_group = {
+    name           = "spoke-nsg"
+    security_rules = jsondecode(templatefile("./rules/network_security_groups/spoke_network_security_group.json", {
+      hub_gateway_address_prefix = local.virtual_private_network_gateway.address_prefixes[0]
+    }))
+  }
 
   spoke_virtual_machine = {
     name                    = "spoke-vm"
@@ -58,9 +71,19 @@ locals {
     }
   }
 
-  spoke_storage_account_name = "spokestorageaccount"
+  spoke_route_table = {
+    name   = "spoke-route-table"
+    routes = jsondecode(templatefile("./rules/route_tables/spoke_route_table.json", {
+      hub_virtual_network_address = local.hub_virtual_network.address_space[0]
+      hub_gateway_address_prefix  = local.virtual_private_network_gateway.address_prefixes[0]
+    })).routes
+  }
 
-  spoke_route_table_name = "spoke-route-table"
-
-  hub_route_table_name = "hub-route-table"
+  hub_route_table = {
+    name   = "hub-route-table"
+    routes = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
+      spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
+      hub_gateway_subnet_address    = local.hub_virtual_network.subnets[1].address_prefixes[0]
+    })).routes
+  }
 }

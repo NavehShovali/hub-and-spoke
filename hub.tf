@@ -37,13 +37,9 @@ module "hub_virtual_private_network_gateway" {
 module "hub_firewall_policy" {
   source                        = "./modules/firewall_policy"
   location                      = local.location
-  name                          = "${local.resource_prefix}-${local.firewall_name}"
+  name                          = "${local.resource_prefix}-${local.firewall.name}"
   resource_group_name           = azurerm_resource_group.hub.name
-  policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
-    spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
-    hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
-    hub_gateway_address_prefixes = local.virtual_private_network_gateway.address_prefixes[0]
-  }))
+  policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
 
   depends_on = [azurerm_resource_group.hub]
 }
@@ -52,7 +48,7 @@ module "hub_firewall" {
   source = "./modules/firewall"
 
   location            = local.location
-  name                = "${local.resource_prefix}-${local.firewall_name}"
+  name                = "${local.resource_prefix}-${local.firewall.name}"
   resource_group_name = azurerm_resource_group.hub.name
   subnet_id           = local.firewall_subnet_id
   firewall_policy_id  = module.hub_firewall_policy.id
@@ -66,12 +62,9 @@ module "hub_route_table" {
   associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
   firewall_internal_ip   = module.hub_firewall.internal_ip
   location               = local.location
-  name                   = "${local.resource_prefix}-${local.hub_route_table_name}"
+  name                   = "${local.resource_prefix}-${local.hub_route_table.name}"
   resource_group_name    = azurerm_resource_group.hub.name
-  routes                 = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
-    spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
-    hub_gateway_subnet_address = local.hub_virtual_network.subnets[1].address_prefixes[0]
-  })).routes
+  routes                 = local.hub_route_table.routes
 
   depends_on = [module.hub_firewall]
 }
