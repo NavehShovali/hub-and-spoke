@@ -5,7 +5,7 @@ resource "azurerm_firewall_policy" "firewall_policy" {
 }
 
 resource "azurerm_firewall_policy_rule_collection_group" "rule_collection" {
-  for_each           = var.policy_rule_collection_groups
+  for_each = var.policy_rule_collection_groups
 
   name               = each.key
   priority           = each.value.priority

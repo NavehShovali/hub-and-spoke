@@ -13,12 +13,12 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
 resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
   count = var.operating_system == "Linux" ? 1 : 0
 
-  name                            = var.name
-  location                        = var.location
-  resource_group_name             = var.resource_group_name
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
-  network_interface_ids           = [azurerm_network_interface.virtual_machine_nic.id]
-  size                            = var.vm_size
+  network_interface_ids = [azurerm_network_interface.virtual_machine_nic.id]
+  size                  = var.vm_size
 
   admin_password                  = var.admin_password
   admin_username                  = var.admin_username
@@ -44,15 +44,15 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
 resource "azurerm_windows_virtual_machine" "windows_virtual_machine" {
   count = var.operating_system == "Windows" ? 1 : 0
 
-  name                  = var.name
-  location              = var.location
-  resource_group_name   = var.resource_group_name
+  name                = var.name
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   network_interface_ids = [azurerm_network_interface.virtual_machine_nic.id]
   size                  = var.vm_size
 
-  admin_password        = var.admin_password
-  admin_username        = var.admin_username
+  admin_password = var.admin_password
+  admin_username = var.admin_username
 
   os_disk {
     name                 = "${var.name}-os-disk"
@@ -76,5 +76,7 @@ locals {
   virtual_machine = coalesce(
     azurerm_linux_virtual_machine.linux_virtual_machine,
     azurerm_windows_virtual_machine.windows_virtual_machine
-  )[0]
+  )[
+  0
+  ]
 }
