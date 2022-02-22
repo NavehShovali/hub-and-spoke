@@ -1,10 +1,3 @@
-resource "azurerm_public_ip" "virtual_machine" {
-  allocation_method   = "Static"
-  location            = var.location
-  name                = "${var.name}-public-ip"
-  resource_group_name = var.resource_group_name
-}
-
 resource "azurerm_network_interface" "virtual_machine_nic" {
   name                = "${var.name}-nic"
   location            = var.location
@@ -14,7 +7,6 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
     name                          = "${var.name}-ip"
     subnet_id                     = var.subnet_id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.virtual_machine.id
   }
 }
 
