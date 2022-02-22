@@ -39,3 +39,9 @@ variable "policy_rule_collection_groups" {
     }))
   }))
 }
+
+variable "private_ip_ranges" {
+  description = "The ranges of addresses from which the firewall's private IP will be allocated"
+  type        = list(string)
+}
+

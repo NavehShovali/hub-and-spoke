@@ -28,6 +28,7 @@ locals {
 
   firewall = {
     name                          = "hub-firewall"
+    private_ip_ranges             = module.hub_virtual_network.subnets["AzureFirewallSubnet"].address_prefixes
     policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
       spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
       hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
@@ -83,6 +84,7 @@ module "hub_firewall" {
 
   subnet_id                     = local.firewall_subnet_id
   policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
+  private_ip_ranges             = local.firewall.private_ip_ranges
 
   depends_on = [module.hub_virtual_network]
 }

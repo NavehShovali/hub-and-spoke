@@ -23,6 +23,7 @@ resource "azurerm_firewall" "firewall" {
   resource_group_name = var.resource_group_name
 
   firewall_policy_id = module.hub_firewall_policy.id
+  private_ip_ranges  = var.private_ip_ranges
 
   ip_configuration {
     name                 = "${var.name}-ip-configuration"
