@@ -41,7 +41,7 @@ module "hub_firewall_policy" {
   resource_group_name           = azurerm_resource_group.hub.name
   policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
 
-  depends_on = [azurerm_resource_group.hub]
+  depends_on = [module.hub_virtual_network]
 }
 
 module "hub_firewall" {
