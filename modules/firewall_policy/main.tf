@@ -1,6 +1,6 @@
 resource "azurerm_firewall_policy" "firewall_policy" {
   location            = var.location
-  name                = "${var.name}-policy"
+  name                = var.name
   resource_group_name = var.resource_group_name
 }
 

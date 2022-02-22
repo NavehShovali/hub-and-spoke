@@ -10,6 +10,10 @@ output "object" {
   value = azurerm_firewall.firewall
 }
 
-output "internal_ip" {
+output "private_ip" {
   value = azurerm_firewall.firewall.ip_configuration[0].private_ip_address
+}
+
+output "policy_object" {
+  value = module.hub_firewall_policy.object
 }

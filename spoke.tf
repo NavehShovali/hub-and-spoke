@@ -68,7 +68,7 @@ module "spoke_route_table" {
   source = "./modules/route_table"
 
   associated_subnets_ids = [local.spoke_subnet_id]
-  firewall_internal_ip   = module.hub_firewall.internal_ip
+  firewall_private_ip   = module.hub_firewall.private_ip
   location               = local.location
   name                   = "${local.resource_prefix}-${local.spoke_route_table.name}"
   resource_group_name    = azurerm_resource_group.spoke.name

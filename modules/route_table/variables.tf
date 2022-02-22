@@ -13,8 +13,8 @@ variable "name" {
   type        = string
 }
 
-variable "firewall_internal_ip" {
-  description = "The internal IP address of the firewall"
+variable "firewall_private_ip" {
+  description = "The private IP address of the firewall"
   type        = string
 }
 

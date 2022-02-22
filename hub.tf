@@ -34,16 +34,6 @@ module "hub_virtual_private_network_gateway" {
   depends_on = [module.hub_virtual_network]
 }
 
-module "hub_firewall_policy" {
-  source                        = "./modules/firewall_policy"
-  location                      = local.location
-  name                          = "${local.resource_prefix}-${local.firewall.name}"
-  resource_group_name           = azurerm_resource_group.hub.name
-  policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
-
-  depends_on = [module.hub_virtual_network]
-}
-
 module "hub_firewall" {
   source = "./modules/firewall"
 
@@ -51,16 +41,16 @@ module "hub_firewall" {
   name                = "${local.resource_prefix}-${local.firewall.name}"
   resource_group_name = azurerm_resource_group.hub.name
   subnet_id           = local.firewall_subnet_id
-  firewall_policy_id  = module.hub_firewall_policy.id
+  policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
 
-  depends_on = [module.hub_firewall_policy]
+  depends_on = [module.hub_virtual_network]
 }
 
 module "hub_route_table" {
   source = "./modules/route_table"
 
   associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
-  firewall_internal_ip   = module.hub_firewall.internal_ip
+  firewall_private_ip   = module.hub_firewall.private_ip
   location               = local.location
   name                   = "${local.resource_prefix}-${local.hub_route_table.name}"
   resource_group_name    = azurerm_resource_group.hub.name

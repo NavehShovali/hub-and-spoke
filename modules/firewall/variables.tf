@@ -18,12 +18,24 @@ variable "subnet_id" {
   type        = string
 }
 
-variable "firewall_policy_id" {
-  description = "The ID of the firewall policy associated with the firewall"
-  type        = string
-}
-
 variable "public_ip_sku" {
   description = "Defines the SKU of the firewall's public IP resource"
   default     = "Standard"
+}
+
+variable "policy_rule_collection_groups" {
+  description = "Defines the firewall policy's rules"
+  type        = map(object({
+    priority                 = number
+    network_rule_collections = map(object({
+      action   = string
+      priority = number
+      rules    = map(object({
+        protocols             = list(string)
+        source_addresses      = list(string)
+        destination_addresses = list(string)
+        destination_ports     = list(string)
+      }))
+    }))
+  }))
 }
