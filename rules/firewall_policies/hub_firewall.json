@@ -63,6 +63,26 @@
             ]
           }
         }
+      },
+      "default": {
+        "action": "Deny",
+        "priority": 420,
+        "rules": {
+          "external-traffic": {
+            "protocols": [
+              "Any"
+            ],
+            "source_addresses": [
+              "*"
+            ],
+            "destination_addresses": [
+              "*"
+            ],
+            "destination_ports": [
+              "*"
+            ]
+          }
+        }
       }
     }
   }
