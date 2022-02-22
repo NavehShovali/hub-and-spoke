@@ -1,11 +1,14 @@
 output "id" {
-  value = azurerm_storage_account.storage_account.id
+  description = "The ID of the storage account"
+  value       = azurerm_storage_account.storage_account.id
 }
 
 output "name" {
-  value = azurerm_storage_account.storage_account.name
+  description = "The name of the storage account"
+  value       = azurerm_storage_account.storage_account.name
 }
 
 output "object" {
-  value = azurerm_storage_account.storage_account
+  description = "The data object of the storage account"
+  value       = azurerm_storage_account.storage_account
 }

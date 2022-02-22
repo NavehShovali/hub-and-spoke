@@ -1,11 +1,14 @@
 output "id" {
-  value = azurerm_virtual_network_gateway.gateway.id
+  description = "The ID of the VPN gateway"
+  value       = azurerm_virtual_network_gateway.gateway.id
 }
 
 output "name" {
-  value = azurerm_virtual_network_gateway.gateway.name
+  description = "The name of the VPN gateway"
+  value       = azurerm_virtual_network_gateway.gateway.name
 }
 
 output "object" {
-  value = azurerm_virtual_network_gateway.gateway
+  description = "The data object of the VPN gateway"
+  value       = azurerm_virtual_network_gateway.gateway
 }

@@ -1,11 +1,14 @@
 output "id" {
-  value = azurerm_route_table.route_table.id
+  description = "The ID of the route table"
+  value       = azurerm_route_table.route_table.id
 }
 
 output "name" {
-  value = azurerm_route_table.route_table.name
+  description = "The name of the route table"
+  value       = azurerm_route_table.route_table.name
 }
 
 output "object" {
-  value = azurerm_route_table.route_table
+  description = "The data object of the route table"
+  value       = azurerm_route_table.route_table
 }

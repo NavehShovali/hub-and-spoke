@@ -1,11 +1,14 @@
 output "id" {
-  value = azurerm_firewall_policy.firewall_policy.id
+  description = "The ID of the firewall policy"
+  value       = azurerm_firewall_policy.firewall_policy.id
 }
 
 output "name" {
-  value = azurerm_firewall_policy.firewall_policy.name
+  description = "The name of the firewall policy"
+  value       = azurerm_firewall_policy.firewall_policy.name
 }
 
 output "object" {
-  value = azurerm_firewall_policy.firewall_policy
+  description = "The data object of the firewall policy"
+  value       = azurerm_firewall_policy.firewall_policy
 }
