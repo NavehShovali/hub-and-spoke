@@ -11,10 +11,10 @@ resource "azurerm_virtual_network_gateway" "gateway" {
   location                   = var.location
   resource_group_name        = var.resource_group_name
 
-  generation                 = "Generation2"
-  sku                        = "VpnGw2"
-  type                       = "Vpn"
-  vpn_type                   = "RouteBased"
+  generation                 = var.generation
+  sku                        = var.sku
+  type                       = var.type
+  vpn_type                   = var.vpn_type
   active_active              = false
   private_ip_address_enabled = false
 
@@ -25,8 +25,8 @@ resource "azurerm_virtual_network_gateway" "gateway" {
 
   vpn_client_configuration {
     address_space        = var.address_prefixes
-    vpn_client_protocols = ["OpenVPN"]
-    vpn_auth_types       = ["AAD"]
+    vpn_client_protocols = var.vpn_client_protocols
+    vpn_auth_types       = var.vpn_auth_types
     aad_audience         = var.azure_active_directory_authentication.audience
     aad_issuer           = var.azure_active_directory_authentication.issuer
     aad_tenant           = var.azure_active_directory_authentication.tenant

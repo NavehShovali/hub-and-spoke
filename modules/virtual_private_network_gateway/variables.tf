@@ -32,3 +32,33 @@ variable "address_prefixes" {
   description = "Gateway connection addresses"
   type        = list(string)
 }
+
+variable "generation" {
+  description = "The Generation of the Virtual Network gateway. Defaults to `Generation2`"
+  default     = "Generation2"
+}
+
+variable "sku" {
+  description = "Configuration of the size and capacity of the virtual network gateway. Defaults to `VpnGw2`"
+  default     = "VpnGw2"
+}
+
+variable "type" {
+  description = "The type of the Virtual Network Gateway. Defaults to `Vpn`"
+  default     = "Vpn"
+}
+
+variable "vpn_type" {
+  description = "The routing type of the Virtual Network Gateway. Defaults to `RouteBased`"
+  default     = "RouteBased"
+}
+
+variable "vpn_client_protocols" {
+  description = "List of the protocols supported by the vpn client. Defaults to `['OpenVPN']`"
+  default     = ["OpenVPN"]
+}
+
+variable "vpn_auth_types" {
+  description = "List of the vpn authentication types for the virtual network gateway. Defaults to `['AAD']`"
+  default     = ["AAD"]
+}
