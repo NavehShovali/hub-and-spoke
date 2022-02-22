@@ -4,13 +4,13 @@ variable "resource_group_name" {
 }
 
 variable "name" {
-  type        = string
   description = "Resource group to use"
+  type        = string
 }
 
 variable "location" {
-  type        = string
   description = "Location to deploy to"
+  type        = string
 }
 
 variable "security_rules" {
@@ -29,4 +29,9 @@ variable "security_rules" {
     source_address_prefixes      = list(string)
     destination_address_prefixes = list(string)
   }))
+}
+
+variable "subnet_id" {
+  type        = string
+  description = "The subnet to associate the NSG with"
 }

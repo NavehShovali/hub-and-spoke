@@ -70,13 +70,7 @@ module "spoke_network_security_group" {
   name                = "${local.environment_prefix}-${local.spoke_network_security_group.name}"
   resource_group_name = azurerm_resource_group.spoke.name
   security_rules      = local.spoke_network_security_group.security_rules
-
-  depends_on = [module.spoke_virtual_network]
-}
-
-resource "azurerm_subnet_network_security_group_association" "spoke" {
-  network_security_group_id = module.spoke_network_security_group.id
-  subnet_id                 = local.spoke_subnet_id
+  subnet_id           = local.spoke_subnet_id
 
   depends_on = [module.spoke_virtual_network]
 }
