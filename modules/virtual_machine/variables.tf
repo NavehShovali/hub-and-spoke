@@ -48,3 +48,15 @@ variable "admin_username" {
   description = "Defines the virtual machine's admin username"
   type        = string
 }
+
+variable "data_disks" {
+  description = "A map from name to data object of the data disks to attach to the virtual machine (optional)"
+  default     = {}
+  type        = map(object({
+    storage_account_type = string
+    create_option        = string
+    disk_size_gb         = number
+    lun                  = number
+    caching              = string
+  }))
+}
