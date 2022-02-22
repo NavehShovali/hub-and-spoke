@@ -59,9 +59,20 @@ module "spoke_storage_account" {
   location            = local.location
   name                = local.spoke_storage_account_name
   resource_group_name = azurerm_resource_group.spoke.name
-  subnet_id           = local.spoke_subnet_id
 
   depends_on = [azurerm_resource_group.spoke]
+}
+
+module "spoke_storage_account_private_endpoint" {
+  source = "./modules/private_endpoint"
+
+  location   = local.location
+  name       = "${local.spoke_storage_account_name}-private-endpoint"
+  private_connection_resource_id = module.spoke_storage_account.id
+  resource_group_name = azurerm_resource_group.spoke.name
+  subnet_id = local.spoke_subnet_id
+
+  depends_on = [module.spoke_storage_account]
 }
 
 module "spoke_route_table" {
