@@ -16,7 +16,8 @@ locals {
   spoke_network_security_group = {
     name           = "spoke-nsg"
     security_rules = jsondecode(templatefile("./rules/network_security_groups/spoke_network_security_group.json", {
-      hub_gateway_address_prefix = local.virtual_private_network_gateway.address_prefixes[0]
+      hub_gateway_address_prefix  = local.virtual_private_network_gateway.address_prefixes[0]
+      spoke_subnet_address_prefix = local.spoke_virtual_network.subnets[0].address_prefixes[0]
     }))
   }
 
