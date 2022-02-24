@@ -104,18 +104,18 @@ locals {
   }
 }
 
-#module "hub_route_table" {
-#  source = "./modules/route_table"
-#
-#  name                = "${local.environment_prefix}-${local.hub_route_table.name}"
-#  location            = local.location
-#  resource_group_name = azurerm_resource_group.hub.name
-#
-#  associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
-#  routes                 = local.hub_route_table.routes
-#
-#  depends_on = [module.hub_firewall]
-#}
+module "hub_route_table" {
+  source = "./modules/route_table"
+
+  name                = "${local.environment_prefix}-${local.hub_route_table.name}"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.hub.name
+
+  associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
+  routes                 = local.hub_route_table.routes
+
+  depends_on = [module.hub_firewall]
+}
 
 module "hub_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
