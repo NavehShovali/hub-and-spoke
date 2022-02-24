@@ -1,8 +1,9 @@
 locals {
   hub_virtual_network = {
-    name          = "hub-vnet"
-    address_space = ["10.0.0.0/16"]
-    subnets       = [
+    name                       = "hub-vnet"
+    address_space              = ["10.0.0.0/16"]
+    diagnostic_logs_categories = ["VMProtectionAlerts"]
+    subnets                    = [
       {
         name                                           = "default"
         address_prefixes                               = ["10.0.0.0/25"]
@@ -27,8 +28,11 @@ locals {
   }
 
   firewall = {
-    name                          = "hub-firewall"
-    private_ip_ranges             = module.hub_virtual_network.subnets["AzureFirewallSubnet"].address_prefixes
+    name                       = "hub-firewall"
+    private_ip_ranges          = module.hub_virtual_network.subnets["AzureFirewallSubnet"].address_prefixes
+    diagnostic_logs_categories = [
+      "AzureFirewallApplicationRule", "AzureFirewallNetworkRule", "AzureFirewallDnsProxy"
+    ]
     policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
       spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
       hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
@@ -100,15 +104,37 @@ locals {
   }
 }
 
-module "hub_route_table" {
-  source = "./modules/route_table"
+#module "hub_route_table" {
+#  source = "./modules/route_table"
+#
+#  name                = "${local.environment_prefix}-${local.hub_route_table.name}"
+#  location            = local.location
+#  resource_group_name = azurerm_resource_group.hub.name
+#
+#  associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
+#  routes                 = local.hub_route_table.routes
+#
+#  depends_on = [module.hub_firewall]
+#}
 
-  name                = "${local.environment_prefix}-${local.hub_route_table.name}"
-  location            = local.location
-  resource_group_name = azurerm_resource_group.hub.name
+module "hub_vnet_diagnostic_settings" {
+  source = "./modules/diagnostic_settings"
 
-  associated_subnets_ids = [local.hub_subnet_id, local.gateway_subnet_id]
-  routes                 = local.hub_route_table.routes
+  log_categories     = local.hub_virtual_network.diagnostic_logs_categories
+  name               = "${local.environment_prefix}-${local.hub_virtual_network.name}-diagnostics"
+  storage_account_id = module.spoke_storage_account.id
+  target_resource_id = module.hub_virtual_network.id
 
-  depends_on = [module.hub_firewall]
+  depends_on = [module.spoke_storage_account, module.hub_virtual_network]
+}
+
+module "firewall_diagnostic_settings" {
+  source = "./modules/diagnostic_settings"
+
+  log_categories     = local.firewall.diagnostic_logs_categories
+  name               = "${local.environment_prefix}-${local.firewall.name}-diagnostics"
+  storage_account_id = module.spoke_storage_account.id
+  target_resource_id = module.hub_firewall.id
+
+  depends_on = [module.spoke_storage_account, module.hub_firewall]
 }

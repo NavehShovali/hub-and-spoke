@@ -2,9 +2,10 @@ locals {
   spoke_storage_account_name = "spokestorageaccount"
 
   spoke_virtual_network = {
-    name          = "spoke-vnet"
-    address_space = ["10.1.0.0/16"]
-    subnets       = [
+    name                       = "spoke-vnet"
+    address_space              = ["10.1.0.0/16"]
+    diagnostic_logs_categories = ["VMProtectionAlerts"]
+    subnets                    = [
       {
         name                                           = "default"
         address_prefixes                               = ["10.1.0.0/24"]
@@ -122,15 +123,26 @@ locals {
   }
 }
 
-module "spoke_route_table" {
-  source = "./modules/route_table"
+#module "spoke_route_table" {
+#  source = "./modules/route_table"
+#
+#  name                = "${local.environment_prefix}-${local.spoke_route_table.name}"
+#  location            = local.location
+#  resource_group_name = azurerm_resource_group.spoke.name
+#
+#  associated_subnets_ids = [local.spoke_subnet_id]
+#  routes                 = local.spoke_route_table.routes
+#
+#  depends_on = [module.hub_firewall]
+#}
 
-  name                = "${local.environment_prefix}-${local.spoke_route_table.name}"
-  location            = local.location
-  resource_group_name = azurerm_resource_group.spoke.name
+module "spoke_vnet_diagnostic_settings" {
+  source = "./modules/diagnostic_settings"
 
-  associated_subnets_ids = [local.spoke_subnet_id]
-  routes                 = local.spoke_route_table.routes
+  log_categories     = local.spoke_virtual_network.diagnostic_logs_categories
+  name               = "${local.environment_prefix}-${local.spoke_virtual_network.name}-diagnostics"
+  storage_account_id = module.spoke_storage_account.id
+  target_resource_id = module.spoke_virtual_network.id
 
-  depends_on = [module.hub_firewall]
+  depends_on = [module.spoke_storage_account, module.spoke_virtual_network]
 }
