@@ -26,7 +26,7 @@ locals {
     name                    = "spoke-vm"
     vm_size                 = "Standard_DS1_v2"
     admin_username          = "naveh"
-    operating_system        = "Linux"
+    is_linux                = true
     storage_image_reference = {
       publisher = "Canonical"
       offer     = "UbuntuServer"
@@ -78,8 +78,8 @@ module "spoke_virtual_machine" {
   location            = local.location
   resource_group_name = azurerm_resource_group.spoke.name
 
-  operating_system        = local.spoke_virtual_machine.operating_system
   storage_image_reference = local.spoke_virtual_machine.storage_image_reference
+  is_linux                = true
   vm_size                 = local.spoke_virtual_machine.vm_size
   subnet_id               = local.spoke_subnet_id
 

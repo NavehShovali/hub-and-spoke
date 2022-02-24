@@ -11,7 +11,7 @@ resource "azurerm_network_interface" "virtual_machine_nic" {
 }
 
 resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
-  count = var.operating_system == "Linux" ? 1 : 0
+  count = var.is_linux ? 1 : 0
 
   name                = var.name
   location            = var.location
@@ -42,7 +42,7 @@ resource "azurerm_linux_virtual_machine" "linux_virtual_machine" {
 }
 
 resource "azurerm_windows_virtual_machine" "windows_virtual_machine" {
-  count = var.operating_system == "Windows" ? 1 : 0
+  count = var.is_linux ? 0 : 1
 
   name                = var.name
   location            = var.location

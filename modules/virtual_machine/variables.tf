@@ -8,9 +8,9 @@ variable "location" {
   type        = string
 }
 
-variable "operating_system" {
-  description = "Defines which virtual machine to deploy. Possible values are `Linux` and `Windows`"
-  type        = string
+variable "is_linux" {
+  description = "Defines the operating system. If true, a Linux VM will be instantiated. Otherwise, the OS would be Windows"
+  type        = bool
 }
 
 variable "name" {
