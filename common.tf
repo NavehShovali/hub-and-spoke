@@ -29,3 +29,16 @@ module "peer_hub_and_spoke" {
     module.hub_virtual_network, module.spoke_virtual_network, module.hub_virtual_private_network_gateway
   ]
 }
+
+resource "azurerm_resource_group" "common" {
+  location = local.location
+  name     = "${local.environment_prefix}-hub"
+}
+
+module "log_analytics_workspace" {
+  source = "./modules/logs_analytics_workspace"
+
+  location            = local.location
+  name                = "${local.environment_prefix}-log-analytics-workspace"
+  resource_group_name = azurerm_resource_group.common
+}

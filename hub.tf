@@ -116,21 +116,21 @@ module "hub_route_table" {
 module "hub_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories       = local.hub_virtual_network.diagnostic_logs_categories
-  storage_account_id   = module.spoke_storage_account.id
-  target_resource_name = module.hub_virtual_network.name
-  target_resource_id   = module.hub_virtual_network.id
+  log_categories             = local.hub_virtual_network.diagnostic_logs_categories
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+  target_resource_name       = module.hub_virtual_network.name
+  target_resource_id         = module.hub_virtual_network.id
 
-  depends_on = [module.spoke_storage_account, module.hub_virtual_network]
+  depends_on = [module.log_analytics_workspace, module.spoke_storage_account, module.hub_virtual_network]
 }
 
 module "firewall_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories       = local.firewall.diagnostic_logs_categories
-  storage_account_id   = module.spoke_storage_account.id
-  target_resource_name = module.hub_firewall.name
-  target_resource_id   = module.hub_firewall.id
+  log_categories             = local.firewall.diagnostic_logs_categories
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+  target_resource_name       = module.hub_firewall.name
+  target_resource_id         = module.hub_firewall.id
 
-  depends_on = [module.spoke_storage_account, module.hub_firewall]
+  depends_on = [module.log_analytics_workspace, module.spoke_storage_account, module.hub_firewall]
 }
