@@ -13,6 +13,11 @@ variable "name" {
   type        = string
 }
 
+variable "public_ip_allocation_method" {
+  description = "Defines the public IP's allocation method. Possible values are 'Dynamic' or 'Static'"
+  default     = "Dynamic"
+}
+
 variable "subnet_id" {
   description = "ID of the gateway subnet"
   type        = string
