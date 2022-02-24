@@ -139,10 +139,10 @@ module "spoke_route_table" {
 module "spoke_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories     = local.spoke_virtual_network.diagnostic_logs_categories
-  name               = "${local.environment_prefix}-${local.spoke_virtual_network.name}-diagnostics"
-  storage_account_id = module.spoke_storage_account.id
-  target_resource_id = module.spoke_virtual_network.id
+  log_categories       = local.spoke_virtual_network.diagnostic_logs_categories
+  storage_account_id   = module.spoke_storage_account.id
+  target_resource_name = module.spoke_virtual_network
+  target_resource_id   = module.spoke_virtual_network.id
 
   depends_on = [module.spoke_storage_account, module.spoke_virtual_network]
 }

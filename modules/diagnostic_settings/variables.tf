@@ -1,4 +1,4 @@
-variable "name" {
+variable "target_resource_name" {
   description = "The diagnostic setting resource's name"
   type        = string
 }

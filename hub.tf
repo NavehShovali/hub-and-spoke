@@ -120,10 +120,10 @@ module "hub_route_table" {
 module "hub_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories     = local.hub_virtual_network.diagnostic_logs_categories
-  name               = "${local.environment_prefix}-${local.hub_virtual_network.name}-diagnostics"
-  storage_account_id = module.spoke_storage_account.id
-  target_resource_id = module.hub_virtual_network.id
+  log_categories       = local.hub_virtual_network.diagnostic_logs_categories
+  storage_account_id   = module.spoke_storage_account.id
+  target_resource_name = module.hub_virtual_network
+  target_resource_id   = module.hub_virtual_network.id
 
   depends_on = [module.spoke_storage_account, module.hub_virtual_network]
 }
@@ -131,10 +131,10 @@ module "hub_vnet_diagnostic_settings" {
 module "firewall_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories     = local.firewall.diagnostic_logs_categories
-  name               = "${local.environment_prefix}-${local.firewall.name}-diagnostics"
-  storage_account_id = module.spoke_storage_account.id
-  target_resource_id = module.hub_firewall.id
+  log_categories       = local.firewall.diagnostic_logs_categories
+  storage_account_id   = module.spoke_storage_account.id
+  target_resource_name = module.hub_firewall.name
+  target_resource_id   = module.hub_firewall.id
 
   depends_on = [module.spoke_storage_account, module.hub_firewall]
 }
