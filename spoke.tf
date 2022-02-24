@@ -5,20 +5,18 @@ locals {
     name                       = "spoke-vnet"
     address_space              = ["10.1.0.0/16"]
     diagnostic_logs_categories = ["VMProtectionAlerts"]
-    subnets                    = [
-      {
-        name                                           = "default"
-        address_prefixes                               = ["10.1.0.0/24"]
-        enforce_private_link_endpoint_network_policies = true
+    subnets                    = {
+      default = {
+        address_prefixes = ["10.1.0.0/24"]
       }
-    ]
+    }
   }
 
   spoke_network_security_group = {
     name           = "spoke-nsg"
     security_rules = jsondecode(templatefile("./rules/network_security_groups/spoke_network_security_group.json", {
       hub_gateway_address_prefix  = local.virtual_private_network_gateway.address_prefixes[0]
-      spoke_subnet_address_prefix = local.spoke_virtual_network.subnets[0].address_prefixes[0]
+      spoke_subnet_address_prefix = local.spoke_virtual_network.subnets.default.address_prefixes[0]
     }))
   }
 
@@ -141,7 +139,7 @@ module "spoke_vnet_diagnostic_settings" {
 
   log_categories       = local.spoke_virtual_network.diagnostic_logs_categories
   storage_account_id   = module.spoke_storage_account.id
-  target_resource_name = module.spoke_virtual_network
+  target_resource_name = module.spoke_virtual_network.name
   target_resource_id   = module.spoke_virtual_network.id
 
   depends_on = [module.spoke_storage_account, module.spoke_virtual_network]

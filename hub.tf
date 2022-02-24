@@ -3,23 +3,19 @@ locals {
     name                       = "hub-vnet"
     address_space              = ["10.0.0.0/16"]
     diagnostic_logs_categories = ["VMProtectionAlerts"]
-    subnets                    = [
-      {
-        name                                           = "default"
-        address_prefixes                               = ["10.0.0.0/25"]
-        enforce_private_link_endpoint_network_policies = true
-      },
-      {
-        name                                           = "GatewaySubnet"
-        address_prefixes                               = ["10.0.1.0/24"]
-        enforce_private_link_endpoint_network_policies = true
-      },
-      {
-        name                                           = "AzureFirewallSubnet"
-        address_prefixes                               = ["10.0.0.128/25"]
-        enforce_private_link_endpoint_network_policies = true
+    subnets                    = {
+      default = {
+        address_prefixes = [
+          "10.0.0.0/25"
+        ]
       }
-    ]
+      GatewaySubnet = {
+        address_prefixes = ["10.0.1.0/24"]
+      }
+      AzureFirewallSubnet = {
+        address_prefixes = ["10.0.0.128/25"]
+      }
+    }
   }
 
   virtual_private_network_gateway = {
@@ -98,7 +94,7 @@ locals {
     name   = "hub-route-table"
     routes = jsondecode(templatefile("./rules/route_tables/hub_route_table.json", {
       spoke_virtual_network_address = local.spoke_virtual_network.address_space[0]
-      hub_gateway_subnet_address    = local.hub_virtual_network.subnets[1].address_prefixes[0]
+      hub_gateway_subnet_address    = local.hub_virtual_network.subnets.GatewaySubnet.address_prefixes[0]
       firewall_private_ip           = module.hub_firewall.private_ip
     }))
   }
@@ -122,7 +118,7 @@ module "hub_vnet_diagnostic_settings" {
 
   log_categories       = local.hub_virtual_network.diagnostic_logs_categories
   storage_account_id   = module.spoke_storage_account.id
-  target_resource_name = module.hub_virtual_network
+  target_resource_name = module.hub_virtual_network.name
   target_resource_id   = module.hub_virtual_network.id
 
   depends_on = [module.spoke_storage_account, module.hub_virtual_network]
