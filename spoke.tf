@@ -4,7 +4,6 @@ locals {
   spoke_virtual_network = {
     name                       = "spoke-vnet"
     address_space              = ["10.1.0.0/16"]
-    diagnostic_logs_categories = ["VMProtectionAlerts"]
     subnets                    = {
       default = {
         address_prefixes = ["10.1.0.0/24"]
@@ -137,7 +136,6 @@ module "spoke_route_table" {
 module "spoke_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories             = local.spoke_virtual_network.diagnostic_logs_categories
   log_analytics_workspace_id = module.log_analytics_workspace.id
   target_resource_name       = module.spoke_virtual_network.name
   target_resource_id         = module.spoke_virtual_network.id

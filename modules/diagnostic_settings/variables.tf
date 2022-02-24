@@ -12,8 +12,3 @@ variable "log_analytics_workspace_id" {
   description = "The ID of the storage account to which logs should be sent"
   type        = string
 }
-
-variable "log_categories" {
-  description = "The names of the diagnostic log categories"
-  type        = list(string)
-}

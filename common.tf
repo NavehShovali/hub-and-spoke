@@ -32,7 +32,7 @@ module "peer_hub_and_spoke" {
 
 resource "azurerm_resource_group" "common" {
   location = local.location
-  name     = "${local.environment_prefix}-hub"
+  name     = "${local.environment_prefix}-common"
 }
 
 module "log_analytics_workspace" {
@@ -40,5 +40,5 @@ module "log_analytics_workspace" {
 
   location            = local.location
   name                = "${local.environment_prefix}-log-analytics-workspace"
-  resource_group_name = azurerm_resource_group.common
+  resource_group_name = azurerm_resource_group.common.name
 }

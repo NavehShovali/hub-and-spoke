@@ -2,7 +2,6 @@ locals {
   hub_virtual_network = {
     name                       = "hub-vnet"
     address_space              = ["10.0.0.0/16"]
-    diagnostic_logs_categories = ["VMProtectionAlerts"]
     subnets                    = {
       default = {
         address_prefixes = [
@@ -26,9 +25,6 @@ locals {
   firewall = {
     name                       = "hub-firewall"
     private_ip_ranges          = module.hub_virtual_network.subnets["AzureFirewallSubnet"].address_prefixes
-    diagnostic_logs_categories = [
-      "AzureFirewallApplicationRule", "AzureFirewallNetworkRule", "AzureFirewallDnsProxy"
-    ]
     policy_rule_collection_groups = jsondecode(templatefile("./rules/firewall_policies/hub_firewall.json", {
       spoke_vnet_address_pool      = local.spoke_virtual_network.address_space[0]
       hub_vnet_address_pool        = local.hub_virtual_network.address_space[0]
@@ -116,7 +112,6 @@ module "hub_route_table" {
 module "hub_vnet_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories             = local.hub_virtual_network.diagnostic_logs_categories
   log_analytics_workspace_id = module.log_analytics_workspace.id
   target_resource_name       = module.hub_virtual_network.name
   target_resource_id         = module.hub_virtual_network.id
@@ -127,7 +122,6 @@ module "hub_vnet_diagnostic_settings" {
 module "firewall_diagnostic_settings" {
   source = "./modules/diagnostic_settings"
 
-  log_categories             = local.firewall.diagnostic_logs_categories
   log_analytics_workspace_id = module.log_analytics_workspace.id
   target_resource_name       = module.hub_firewall.name
   target_resource_id         = module.hub_firewall.id
