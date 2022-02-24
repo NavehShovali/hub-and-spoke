@@ -23,7 +23,7 @@ resource "azurerm_network_security_group" "security_group" {
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "spoke" {
+resource "azurerm_subnet_network_security_group_association" "security_group_association" {
   network_security_group_id = azurerm_network_security_group.security_group.id
   subnet_id                 = var.subnet_id
 
