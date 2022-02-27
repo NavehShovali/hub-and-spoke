@@ -1,7 +1,7 @@
 resource "azurerm_public_ip" "gateway_ips" {
-  count = var.active_active ? 2 : 1
+  for_each = var.active_active ? toset(["-1", "-2"]) : toset([""])
 
-  name                = "${var.name}-public-ip${var.active_active ? "-${count.index + 1}" : ""}"
+  name                = "${var.name}-public-ip${each.value}"
   location            = var.location
   resource_group_name = var.resource_group_name
 
