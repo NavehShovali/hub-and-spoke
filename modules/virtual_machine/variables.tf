@@ -65,3 +65,8 @@ variable "data_disks" {
     caching              = string
   }))
 }
+
+variable "storage_account_id" {
+  description = "The ID of the storage account to save logs to"
+  type        = string
+}

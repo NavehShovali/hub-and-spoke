@@ -103,3 +103,13 @@ resource "azurerm_virtual_machine_data_disk_attachment" "virtual_machine_disk_at
   caching            = each.value.caching
   lun                = each.value.lun
 }
+
+module "virtual_machine_diagnostic_settings" {
+  source = "../diagnostic_settings"
+
+  storage_account_id   = var.storage_account_id
+  target_resource_name = local.virtual_machine.name
+  target_resource_id   = local.virtual_machine.id
+
+  depends_on = [local.virtual_machine]
+}

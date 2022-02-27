@@ -9,6 +9,13 @@ variable "target_resource_id" {
 }
 
 variable "log_analytics_workspace_id" {
+  description = "The ID of the log analytics workspace to which logs should be sent"
+  type        = string
+  default     = null
+}
+
+variable "storage_account_id" {
   description = "The ID of the storage account to which logs should be sent"
   type        = string
+  default     = null
 }
