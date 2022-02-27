@@ -15,6 +15,7 @@ variable "name" {
 
 variable "sku" {
   description = "Specifies the Sku of the Log Analytics Workspace. Defaults to 'PerGB2018'"
+  type        = string
   default     = "PerGB2018"
 }
 

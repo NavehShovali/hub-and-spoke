@@ -31,5 +31,6 @@ variable "private_connection_resource_id" {
 
 variable "is_manual_connection" {
   description = "Defines whether the private service connection is manual. Defaults to false"
+  type        = bool
   default     = false
 }

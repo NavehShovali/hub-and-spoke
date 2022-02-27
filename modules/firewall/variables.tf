@@ -20,6 +20,7 @@ variable "subnet_id" {
 
 variable "public_ip_sku" {
   description = "Defines the SKU of the firewall's public IP resource"
+  type        = string
   default     = "Standard"
 }
 

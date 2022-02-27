@@ -15,6 +15,7 @@ variable "name" {
 
 variable "public_ip_allocation_method" {
   description = "Defines the public IP's allocation method. Possible values are 'Dynamic' or 'Static'"
+  type        = string
   default     = "Dynamic"
 }
 
@@ -40,30 +41,36 @@ variable "address_prefixes" {
 
 variable "generation" {
   description = "The Generation of the Virtual Network gateway. Defaults to `Generation2`"
+  type        = string
   default     = "Generation2"
 }
 
 variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway. Defaults to `VpnGw2`"
+  type        = string
   default     = "VpnGw2"
 }
 
 variable "type" {
   description = "The type of the Virtual Network Gateway. Defaults to `Vpn`"
+  type        = string
   default     = "Vpn"
 }
 
 variable "vpn_type" {
   description = "The routing type of the Virtual Network Gateway. Defaults to `RouteBased`"
+  type        = string
   default     = "RouteBased"
 }
 
 variable "vpn_client_protocols" {
   description = "List of the protocols supported by the vpn client. Defaults to `['OpenVPN']`"
+  type        = list(string)
   default     = ["OpenVPN"]
 }
 
 variable "vpn_auth_types" {
   description = "List of the vpn authentication types for the virtual network gateway. Defaults to `['AAD']`"
+  type        = list(string)
   default     = ["AAD"]
 }
