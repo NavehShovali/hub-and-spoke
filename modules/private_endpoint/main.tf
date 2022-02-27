@@ -1,4 +1,4 @@
-resource "azurerm_private_endpoint" "storage_account_private_endpoint" {
+resource "azurerm_private_endpoint" "private_endpoint" {
   name                = var.name
   location            = var.location
   resource_group_name = var.resource_group_name
