@@ -30,6 +30,16 @@ module "spoke_network_security_group" {
   depends_on = [module.spoke_virtual_network]
 }
 
+module "spoke_storage_account" {
+  source = "./modules/storage_account"
+
+  name                = local.spoke_storage_account_name
+  location            = local.location
+  resource_group_name = azurerm_resource_group.spoke.name
+
+  depends_on = [azurerm_resource_group.spoke]
+}
+
 module "spoke_virtual_machine" {
   source = "./modules/virtual_machine"
 
@@ -45,17 +55,9 @@ module "spoke_virtual_machine" {
   admin_password = var.virtual_machine_admin_password
   admin_username = local.spoke_virtual_machine.admin_username
 
-  depends_on = [module.spoke_virtual_network]
-}
+  storage_account_id = module.spoke_storage_account.id
 
-module "spoke_storage_account" {
-  source = "./modules/storage_account"
-
-  name                = local.spoke_storage_account_name
-  location            = local.location
-  resource_group_name = azurerm_resource_group.spoke.name
-
-  depends_on = [azurerm_resource_group.spoke]
+  depends_on = [module.spoke_virtual_network, module.spoke_storage_account]
 }
 
 module "spoke_storage_account_private_endpoint" {
