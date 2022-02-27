@@ -107,10 +107,10 @@ resource "azurerm_virtual_machine_data_disk_attachment" "virtual_machine_disk_at
 module "virtual_machine_diagnostic_settings" {
   source = "../diagnostic_settings"
 
-  storage_account_id   = var.storage_account_id
-  target_resource_name = local.virtual_machine.name
-  target_resource_id   = local.virtual_machine.id
-  metrics              = ["AllMetrics"]
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  target_resource_name       = local.virtual_machine.name
+  target_resource_id         = local.virtual_machine.id
+  metrics                    = ["AllMetrics"]
 
   depends_on = [local.virtual_machine]
 }

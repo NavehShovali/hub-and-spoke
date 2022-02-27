@@ -55,7 +55,7 @@ module "spoke_virtual_machine" {
   admin_password = var.virtual_machine_admin_password
   admin_username = local.spoke_virtual_machine.admin_username
 
-  storage_account_id = module.spoke_storage_account.id
+  log_analytics_workspace_id = module.log_analytics_workspace.id
 
   depends_on = [module.spoke_virtual_network, module.spoke_storage_account]
 }

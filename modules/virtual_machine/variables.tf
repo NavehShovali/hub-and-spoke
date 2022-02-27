@@ -66,7 +66,7 @@ variable "data_disks" {
   }))
 }
 
-variable "storage_account_id" {
-  description = "The ID of the storage account to save logs to"
+variable "log_analytics_workspace_id" {
+  description = "The ID of the log analytics workspace to save logs to"
   type        = string
 }
