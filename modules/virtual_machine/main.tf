@@ -76,9 +76,7 @@ locals {
   virtual_machine = coalesce(
     azurerm_linux_virtual_machine.linux_virtual_machine,
     azurerm_windows_virtual_machine.windows_virtual_machine
-  )[
-  0
-  ]
+  )[0]
 }
 
 resource "azurerm_managed_disk" "virtual_machine_disks" {

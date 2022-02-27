@@ -28,4 +28,3 @@ module "virtual_network_diagnostic_settings" {
 
   depends_on = [azurerm_virtual_network.virtual_network]
 }
-
