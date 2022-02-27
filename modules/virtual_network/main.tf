@@ -19,7 +19,7 @@ resource "azurerm_subnet" "subnets" {
   depends_on = [azurerm_virtual_network.virtual_network]
 }
 
-module "vnet_diagnostic_settings" {
+module "virtual_network_diagnostic_settings" {
   source = "../diagnostic_settings"
 
   log_analytics_workspace_id = var.log_analytics_workspace_id
