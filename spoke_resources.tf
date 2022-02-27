@@ -8,7 +8,9 @@ module "spoke_virtual_network" {
   address_space = local.spoke_virtual_network.address_space
   subnets       = local.spoke_virtual_network.subnets
 
-  depends_on = [azurerm_resource_group.spoke]
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.spoke, module.log_analytics_workspace]
 }
 
 locals {
@@ -91,14 +93,4 @@ module "spoke_route_table" {
   routes                 = local.spoke_route_table.routes
 
   depends_on = [module.hub_firewall]
-}
-
-module "spoke_vnet_diagnostic_settings" {
-  source = "./modules/diagnostic_settings"
-
-  log_analytics_workspace_id = module.log_analytics_workspace.id
-  target_resource_name       = module.spoke_virtual_network.name
-  target_resource_id         = module.spoke_virtual_network.id
-
-  depends_on = [module.log_analytics_workspace, module.spoke_storage_account, module.spoke_virtual_network]
 }

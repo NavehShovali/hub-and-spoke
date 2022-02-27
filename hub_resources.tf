@@ -8,7 +8,9 @@ module "hub_virtual_network" {
   address_space = local.hub_virtual_network.address_space
   subnets       = local.hub_virtual_network.subnets
 
-  depends_on = [azurerm_resource_group.hub]
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.hub, module.log_analytics_workspace]
 }
 
 locals {
@@ -42,7 +44,9 @@ module "hub_firewall" {
   policy_rule_collection_groups = local.firewall.policy_rule_collection_groups
   private_ip_ranges             = local.firewall.private_ip_ranges
 
-  depends_on = [module.hub_virtual_network]
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [module.hub_virtual_network, module.log_analytics_workspace]
 }
 
 locals {
@@ -67,24 +71,4 @@ module "hub_route_table" {
   routes                 = local.hub_route_table.routes
 
   depends_on = [module.hub_firewall]
-}
-
-module "hub_vnet_diagnostic_settings" {
-  source = "./modules/diagnostic_settings"
-
-  log_analytics_workspace_id = module.log_analytics_workspace.id
-  target_resource_name       = module.hub_virtual_network.name
-  target_resource_id         = module.hub_virtual_network.id
-
-  depends_on = [module.log_analytics_workspace, module.spoke_storage_account, module.hub_virtual_network]
-}
-
-module "firewall_diagnostic_settings" {
-  source = "./modules/diagnostic_settings"
-
-  log_analytics_workspace_id = module.log_analytics_workspace.id
-  target_resource_name       = module.hub_firewall.name
-  target_resource_id         = module.hub_firewall.id
-
-  depends_on = [module.log_analytics_workspace, module.spoke_storage_account, module.hub_firewall]
 }

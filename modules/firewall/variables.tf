@@ -46,3 +46,7 @@ variable "private_ip_ranges" {
   type        = list(string)
 }
 
+variable "log_analytics_workspace_id" {
+  description = "The ID of the log analytics workspace to save logs to"
+  type        = string
+}

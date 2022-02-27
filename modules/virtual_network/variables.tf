@@ -25,3 +25,8 @@ variable "subnets" {
     enforce_private_link_endpoint_network_policies = optional(bool)
   }))
 }
+
+variable "log_analytics_workspace_id" {
+  description = "The ID of the log analytics workspace to save logs to"
+  type        = string
+}

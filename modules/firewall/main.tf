@@ -33,3 +33,13 @@ resource "azurerm_firewall" "firewall" {
 
   depends_on = [azurerm_public_ip.public_ip, module.hub_firewall_policy]
 }
+
+module "firewall_diagnostic_settings" {
+  source = "../diagnostic_settings"
+
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  target_resource_name       = azurerm_firewall.firewall.name
+  target_resource_id         = azurerm_firewall.firewall.id
+
+  depends_on = [azurerm_firewall.firewall]
+}
