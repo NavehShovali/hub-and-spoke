@@ -49,11 +49,6 @@ variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway. Defaults to `VpnGw2`"
   type        = string
   default     = "VpnGw2"
-
-  validation {
-    condition     = var.active_active && var.sku != "HighPerformance" && var.sku != "UltraPerformance"
-    error_message = "An active-active gateway requires a `HighPerformance` or `UltraPerformance` sku"
-  }
 }
 
 variable "type" {
