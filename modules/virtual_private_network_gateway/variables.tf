@@ -49,6 +49,11 @@ variable "sku" {
   description = "Configuration of the size and capacity of the virtual network gateway. Defaults to `VpnGw2`"
   type        = string
   default     = "VpnGw2"
+
+  validation {
+    condition     = var.active_active && var.sku != "HighPerformance" && var.sku != "UltraPerformance"
+    error_message = "An active-active gateway requires a `HighPerformance` or `UltraPerformance` sku"
+  }
 }
 
 variable "type" {
@@ -73,4 +78,10 @@ variable "vpn_auth_types" {
   description = "List of the vpn authentication types for the virtual network gateway. Defaults to `['AAD']`"
   type        = list(string)
   default     = ["AAD"]
+}
+
+variable "active_active" {
+  description = "If true, an active-active Virtual Network Gateway will be created. Otherwise, an active-standby gateway will be created"
+  type        = bool
+  default     = false
 }

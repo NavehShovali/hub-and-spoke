@@ -1,5 +1,7 @@
-resource "azurerm_public_ip" "gateway" {
-  name                = "${var.name}-public-ip"
+resource "azurerm_public_ip" "gateway_ips" {
+  count = var.active_active ? 2 : 1
+
+  name                = "${var.name}-public-ip${var.active_active ? "-${count.index + 1}" : ""}"
   location            = var.location
   resource_group_name = var.resource_group_name
 
@@ -15,12 +17,16 @@ resource "azurerm_virtual_network_gateway" "gateway" {
   sku                        = var.sku
   type                       = var.type
   vpn_type                   = var.vpn_type
-  active_active              = false
+  active_active              = var.active_active
   private_ip_address_enabled = false
 
-  ip_configuration {
-    public_ip_address_id = azurerm_public_ip.gateway.id
-    subnet_id            = var.subnet_id
+  dynamic "ip_configuration" {
+    for_each = azurerm_public_ip.gateway_ips
+
+    content {
+      public_ip_address_id = ip_configuration.value.id
+      subnet_id            = var.subnet_id
+    }
   }
 
   vpn_client_configuration {
