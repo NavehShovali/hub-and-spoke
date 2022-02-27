@@ -16,6 +16,11 @@ variable "is_linux" {
 variable "name" {
   description = "The virtual machine's name"
   type        = string
+
+  validation {
+    condition     = length(var.name) <= 15
+    error_message = "Virtual machines' names cannot be longer than 15 characters."
+  }
 }
 
 variable "subnet_id" {
