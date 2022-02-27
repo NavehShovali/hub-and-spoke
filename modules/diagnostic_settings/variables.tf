@@ -19,3 +19,9 @@ variable "storage_account_id" {
   type        = string
   default     = null
 }
+
+variable "metrics" {
+  description = "Defines the metric blocks"
+  type        = list(string)
+  default     = []
+}

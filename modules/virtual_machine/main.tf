@@ -76,7 +76,9 @@ locals {
   virtual_machine = coalesce(
     azurerm_linux_virtual_machine.linux_virtual_machine,
     azurerm_windows_virtual_machine.windows_virtual_machine
-  )[0]
+  )[
+  0
+  ]
 }
 
 resource "azurerm_managed_disk" "virtual_machine_disks" {
@@ -110,6 +112,7 @@ module "virtual_machine_diagnostic_settings" {
   storage_account_id   = var.storage_account_id
   target_resource_name = local.virtual_machine.name
   target_resource_id   = local.virtual_machine.id
+  metrics              = ["AllMetrics"]
 
   depends_on = [local.virtual_machine]
 }

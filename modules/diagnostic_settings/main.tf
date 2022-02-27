@@ -15,4 +15,12 @@ resource "azurerm_monitor_diagnostic_setting" "diagnostic_settings" {
       category = log.key
     }
   }
+
+  dynamic "metric" {
+    for_each = toset(var.metrics)
+
+    content {
+      category = metric.key
+    }
+  }
 }
