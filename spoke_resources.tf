@@ -57,7 +57,7 @@ module "spoke_virtual_machine" {
 
   log_analytics_workspace_id = module.log_analytics_workspace.id
 
-  depends_on = [module.spoke_virtual_network, module.spoke_storage_account]
+  depends_on = [module.spoke_virtual_network, module.log_analytics_workspace]
 }
 
 module "spoke_storage_account_private_endpoint" {
