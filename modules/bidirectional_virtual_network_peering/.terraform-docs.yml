@@ -1,0 +1,26 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Bidirectional virtual network peering
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/peering.tf" }}
+  ```

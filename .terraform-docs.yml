@@ -1,0 +1,19 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+
+content: |-
+  # Hub and Spoke Architecture
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}

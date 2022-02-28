@@ -1,0 +1,26 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Diagnostic settings
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/diagnostic_settings.tf" }}
+  ```

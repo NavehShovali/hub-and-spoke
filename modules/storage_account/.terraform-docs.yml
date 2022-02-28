@@ -1,0 +1,26 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Storage account
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/storage_account.tf" }}
+  ```

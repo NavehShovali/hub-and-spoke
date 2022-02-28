@@ -1,0 +1,89 @@
+{
+  "traffic-rule-collection-group": {
+    "priority": 400,
+    "network_rule_collections": {
+      "spoke-traffic": {
+        "action": "Allow",
+        "priority": 410,
+        "rules": {
+          "from-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "${spoke_vnet_address_pool}"
+            ],
+            "destination_addresses": [
+              "${hub_vnet_address_pool}"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "to-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "${hub_vnet_address_pool}"
+            ],
+            "destination_addresses": [
+              "${spoke_vnet_address_pool}"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "vnet-to-hub": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "${hub_gateway_address_prefixes}"
+            ],
+            "destination_addresses": [
+              "${hub_vnet_address_pool}"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          },
+          "vnet-to-spoke": {
+            "protocols": [
+              "TCP"
+            ],
+            "source_addresses": [
+              "${hub_gateway_address_prefixes}"
+            ],
+            "destination_addresses": [
+              "${spoke_vnet_address_pool}"
+            ],
+            "destination_ports": [
+              "22"
+            ]
+          }
+        }
+      },
+      "default": {
+        "action": "Deny",
+        "priority": 420,
+        "rules": {
+          "external-traffic": {
+            "protocols": [
+              "Any"
+            ],
+            "source_addresses": [
+              "*"
+            ],
+            "destination_addresses": [
+              "*"
+            ],
+            "destination_ports": [
+              "*"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
