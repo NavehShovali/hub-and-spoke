@@ -55,57 +55,11 @@ No modules.
 ## Example
 
 ```hcl
-locals {
-  environment_prefix = "example"
-  location           = "westeurope"
-}
-
-resource "azurerm_resource_group" "example" {
-  location = local.location
-  name     = "${local.environment_prefix}-rg"
-}
-
-module "virtual_network_with_gateway" {
-  source = "../modules/virtual_network"
-
-  name                = "${local.environment_prefix}-virtual-network-with-gateway"
-  location            = local.location
-  resource_group_name = azurerm_resource_group.example.name
-
-  address_space = ["10.2.0.0/16"]
-  subnets       = {
-    default = {
-      address_prefixes = [
-        "10.2.0.0/25"
-      ]
-    }
-    GatewaySubnet = {
-      address_prefixes = [
-        "10.2.0.128/25"
-      ]
-    }
-  }
-
-  log_analytics_workspace_id = module.log_analytics_workspace.id
-
-  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
-}
-
-variable "azure_active_directory_authentication" {
-  description = "The virtual private network's AAD credentials"
-  sensitive   = true
-  type        = object({
-    audience = string
-    issuer   = string
-    tenant   = string
-  })
-}
-
 module "virtual_private_network_gateway" {
   source = "../modules/virtual_private_network_gateway"
 
-  name                = "${local.environment_prefix}-vpn"
-  location            = local.location
+  name                = "example-vpn"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   address_prefixes                      = ["10.2.0.0/24"]

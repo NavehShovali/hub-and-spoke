@@ -55,50 +55,6 @@
 
 ```hcl
 locals {
-  environment_prefix = "example"
-  location           = "westeurope"
-}
-
-resource "azurerm_resource_group" "example" {
-  location = local.location
-  name     = "${local.environment_prefix}-rg"
-}
-
-module "log_analytics_workspace" {
-  source = "../modules/logs_analytics_workspace"
-
-  location            = local.location
-  name                = "${local.environment_prefix}-log-analytics-workspace"
-  resource_group_name = azurerm_resource_group.example.name
-}
-
-module "virtual_network_with_firewall" {
-  source = "../modules/virtual_network"
-
-  name                = "${local.environment_prefix}-virtual-network-with-firewall"
-  location            = local.location
-  resource_group_name = azurerm_resource_group.example.name
-
-  address_space = ["10.3.0.0/16"]
-  subnets       = {
-    default = {
-      address_prefixes = [
-        "10.3.0.0/25"
-      ]
-    }
-    AzureFirewallSubnet = {
-      address_prefixes = [
-        "10.3.0.128/25"
-      ]
-    }
-  }
-
-  log_analytics_workspace_id = module.log_analytics_workspace.id
-
-  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
-}
-
-locals {
   policy_rule_collection_groups = {
     traffic-rule-collection-group = {
       priority                 = 400
@@ -123,8 +79,8 @@ locals {
 module "firewall" {
   source = "../modules/firewall"
 
-  name                = "${local.environment_prefix}-firewall"
-  location            = local.location
+  name                = "example-firewall"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   subnet_id                     = module.virtual_network_with_firewall.subnets.AzureFirewallSubnet.id

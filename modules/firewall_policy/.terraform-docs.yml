@@ -22,7 +22,5 @@ content: |-
   ## Example
   
   ```hcl
-  {{ include "../../examples/resource_group.tf" }}
-  
   {{ include "../../examples/firewall_policy.tf" }}
   ```

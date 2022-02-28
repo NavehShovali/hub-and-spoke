@@ -50,21 +50,11 @@
 ## Example
 
 ```hcl
-locals {
-  environment_prefix = "example"
-  location           = "westeurope"
-}
-
-resource "azurerm_resource_group" "example" {
-  location = local.location
-  name     = "${local.environment_prefix}-rg"
-}
-
 module "virtual_network1" {
   source = "../modules/virtual_network"
 
-  name                = "${local.environment_prefix}-virtual-network1"
-  location            = local.location
+  name                = "example-virtual-network1"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   address_space = ["10.0.0.0/16"]

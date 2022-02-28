@@ -46,16 +46,6 @@ No modules.
 
 ```hcl
 locals {
-  environment_prefix = "example"
-  location           = "westeurope"
-}
-
-resource "azurerm_resource_group" "example" {
-  location = local.location
-  name     = "${local.environment_prefix}-rg"
-}
-
-locals {
   policy_rule_collection_groups = {
     traffic-rule-collection-group = {
       priority                 = 400
@@ -80,8 +70,8 @@ locals {
 module "firewall_policy" {
   source = "../modules/firewall_policy"
 
-  name                = "${local.environment_prefix}-firewall-policy"
-  location            = local.location
+  name                = "example-firewall-policy"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   policy_rule_collection_groups = local.policy_rule_collection_groups

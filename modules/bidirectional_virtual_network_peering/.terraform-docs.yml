@@ -22,13 +22,5 @@ content: |-
   ## Example
   
   ```hcl
-  {{ include "../../examples/resource_group.tf" }}
-  
-  {{ include "../../examples/log_analytics_workspace.tf" }}
-  
-  {{ include "../../examples/vnet1.tf" }}
-  
-  {{ include "../../examples/vnet2.tf" }}
-  
   {{ include "../../examples/peering.tf" }}
   ```
