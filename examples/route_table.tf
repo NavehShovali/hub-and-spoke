@@ -1,8 +1,8 @@
 module "route_table" {
   source = "../modules/route_table"
 
-  name                = "${local.environment_prefix}-route-table"
-  location            = local.location
+  name                = "example-route-table"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   associated_subnets_ids = [module.virtual_network_with_firewall.subnets.default.id]

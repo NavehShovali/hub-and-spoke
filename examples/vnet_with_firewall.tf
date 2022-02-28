@@ -1,8 +1,8 @@
 module "virtual_network_with_firewall" {
   source = "../modules/virtual_network"
 
-  name                = "${local.environment_prefix}-virtual-network-with-firewall"
-  location            = local.location
+  name                = "example-virtual-network-with-firewall"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   address_space = ["10.3.0.0/16"]

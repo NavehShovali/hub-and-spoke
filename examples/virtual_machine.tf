@@ -7,8 +7,8 @@ variable "virtual_machine_admin_password" {
 module "spoke_virtual_machine" {
   source = "../modules/virtual_machine"
 
-  name                = "${local.environment_prefix}-virtual-machine"
-  location            = local.location
+  name                = "example-virtual-machine"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   storage_image_reference = {

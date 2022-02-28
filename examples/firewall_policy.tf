@@ -23,8 +23,8 @@ locals {
 module "firewall_policy" {
   source = "../modules/firewall_policy"
 
-  name                = "${local.environment_prefix}-firewall-policy"
-  location            = local.location
+  name                = "example-firewall-policy"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   policy_rule_collection_groups = local.policy_rule_collection_groups

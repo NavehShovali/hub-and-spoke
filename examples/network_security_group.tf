@@ -16,8 +16,8 @@ locals {
 module "example_network_security_group" {
   source = "../modules/network_security_group"
 
-  name                = "${local.environment_prefix}-network-security-group"
-  location            = local.location
+  name                = "example-network-security-group"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   security_rules = local.security_rules

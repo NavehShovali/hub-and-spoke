@@ -1,8 +1,8 @@
 module "virtual_network2" {
   source = "../modules/virtual_network"
 
-  name                = "${local.environment_prefix}-virtual-network2"
-  location            = local.location
+  name                = "example-virtual-network2"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   address_space = ["10.1.0.0/16"]

@@ -23,8 +23,8 @@ locals {
 module "firewall" {
   source = "../modules/firewall"
 
-  name                = "${local.environment_prefix}-firewall"
-  location            = local.location
+  name                = "example-firewall"
+  location            = "westeurope"
   resource_group_name = azurerm_resource_group.example.name
 
   subnet_id                     = module.virtual_network_with_firewall.subnets.AzureFirewallSubnet.id
