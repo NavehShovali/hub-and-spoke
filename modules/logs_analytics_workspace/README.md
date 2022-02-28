@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Logs analytics workspace
+
 ## Requirements
 
 | Name | Version |
@@ -39,4 +41,26 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the created workspace |
 | <a name="output_name"></a> [name](#output\_name) | The name of the created workspace |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the created workspace |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "log_analytics_workspace" {
+  source = "../modules/logs_analytics_workspace"
+
+  location            = local.location
+  name                = "${local.environment_prefix}-log-analytics-workspace"
+  resource_group_name = azurerm_resource_group.example.name
+}
+```
 <!-- END_TF_DOCS -->

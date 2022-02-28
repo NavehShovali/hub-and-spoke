@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Firewall policy
+
 ## Requirements
 
 | Name | Version |
@@ -39,4 +41,50 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the firewall policy |
 | <a name="output_name"></a> [name](#output\_name) | The name of the firewall policy |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the firewall policy |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+locals {
+  policy_rule_collection_groups = {
+    traffic-rule-collection-group = {
+      priority                 = 400
+      network-rule-collections = {
+        default = {
+          action   = "deny"
+          priority = 410
+          rules    = {
+            external-traffic = {
+              protocols             = ["Any"]
+              source_addresses      = ["*"]
+              destination_addresses = ["*"]
+              destination_ports     = ["*"]
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+module "firewall_policy" {
+  source = "../modules/firewall_policy"
+
+  name                = "${local.environment_prefix}-firewall-policy"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  policy_rule_collection_groups = local.policy_rule_collection_groups
+}
+```
 <!-- END_TF_DOCS -->

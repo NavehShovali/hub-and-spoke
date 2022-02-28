@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Bidirectional virtual network peering
+
 ## Requirements
 
 | Name | Version |
@@ -35,4 +37,96 @@ No modules.
 | <a name="output_ids"></a> [ids](#output\_ids) | List of the IDs of each of the peerings |
 | <a name="output_names"></a> [names](#output\_names) | List of the names of each of the peerings |
 | <a name="output_objects"></a> [objects](#output\_objects) | List of the data objects of each of the peerings |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "log_analytics_workspace" {
+  source = "../modules/logs_analytics_workspace"
+
+  location            = local.location
+  name                = "${local.environment_prefix}-log-analytics-workspace"
+  resource_group_name = azurerm_resource_group.example.name
+}
+
+module "virtual_network1" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network1"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.0.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.0.0.0/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+module "virtual_network2" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network2"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.1.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.1.0.0/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+locals {
+  virtual_networks_to_peer = {
+    virtual-network1 = {
+      resource_group_name   = azurerm_resource_group.example.name
+      name                  = module.virtual_network1.name
+      remote_id             = module.virtual_network2.id
+      allow_gateway_transit = true
+      use_remote_gateways   = false
+    }
+
+    virtual-network2 = {
+      resource_group_name   = azurerm_resource_group.example.name
+      name                  = module.virtual_network2.name
+      remote_id             = module.virtual_network1.id
+      allow_gateway_transit = false
+      use_remote_gateways   = true
+    }
+  }
+}
+
+module "peering" {
+  source = "../modules/bidirectional_virtual_network_peering"
+
+  virtual_networks_to_peer = local.virtual_networks_to_peer
+
+  depends_on = [module.virtual_network1, module.virtual_network2]
+}
+```
 <!-- END_TF_DOCS -->

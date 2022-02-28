@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Diagnostic settings
+
 ## Requirements
 
 | Name | Version |
@@ -27,7 +29,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_log_analytics_workspace_id"></a> [log\_analytics\_workspace\_id](#input\_log\_analytics\_workspace\_id) | The ID of the storage account to which logs should be sent | `string` | n/a | yes |
+| <a name="input_log_analytics_workspace_id"></a> [log\_analytics\_workspace\_id](#input\_log\_analytics\_workspace\_id) | The ID of the log analytics workspace to which logs should be sent | `string` | `null` | no |
+| <a name="input_metrics"></a> [metrics](#input\_metrics) | Defines the metric blocks | `list(string)` | `[]` | no |
+| <a name="input_storage_account_id"></a> [storage\_account\_id](#input\_storage\_account\_id) | The ID of the storage account to which logs should be sent | `string` | `null` | no |
 | <a name="input_target_resource_id"></a> [target\_resource\_id](#input\_target\_resource\_id) | The ID of the resource to monitor | `string` | n/a | yes |
 | <a name="input_target_resource_name"></a> [target\_resource\_name](#input\_target\_resource\_name) | The diagnostic setting resource's name | `string` | n/a | yes |
 
@@ -38,4 +42,57 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the created diagnostic settings resource |
 | <a name="output_name"></a> [name](#output\_name) | The name of the created diagnostic settings resource |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the created diagnostic settings resource |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "log_analytics_workspace" {
+  source = "../modules/logs_analytics_workspace"
+
+  location            = local.location
+  name                = "${local.environment_prefix}-log-analytics-workspace"
+  resource_group_name = azurerm_resource_group.example.name
+}
+
+module "virtual_network1" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network1"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.0.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.0.0.0/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+module "virtual_network_diagnostic_settings" {
+  source = "../modules/diagnostic_settings"
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+  target_resource_name       = module.virtual_network1.name
+  target_resource_id         = module.virtual_network1.id
+
+  depends_on = [module.log_analytics_workspace, module.virtual_network1]
+}
+```
 <!-- END_TF_DOCS -->

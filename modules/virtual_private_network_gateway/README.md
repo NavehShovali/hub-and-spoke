@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Virtual network
+
 ## Requirements
 
 | Name | Version |
@@ -20,13 +22,14 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [azurerm_public_ip.gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
+| [azurerm_public_ip.gateway_ips](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/public_ip) | resource |
 | [azurerm_virtual_network_gateway.gateway](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/virtual_network_gateway) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_active_active"></a> [active\_active](#input\_active\_active) | If true, an active-active Virtual Network Gateway will be created. Otherwise, an active-standby gateway will be created | `bool` | `false` | no |
 | <a name="input_address_prefixes"></a> [address\_prefixes](#input\_address\_prefixes) | Gateway connection addresses | `list(string)` | n/a | yes |
 | <a name="input_azure_active_directory_authentication"></a> [azure\_active\_directory\_authentication](#input\_azure\_active\_directory\_authentication) | Azure Active Directory credentials | <pre>object({<br>    audience = string<br>    issuer   = string<br>    tenant   = string<br>  })</pre> | n/a | yes |
 | <a name="input_generation"></a> [generation](#input\_generation) | The Generation of the Virtual Network gateway. Defaults to `Generation2` | `string` | `"Generation2"` | no |
@@ -37,8 +40,8 @@ No modules.
 | <a name="input_sku"></a> [sku](#input\_sku) | Configuration of the size and capacity of the virtual network gateway. Defaults to `VpnGw2` | `string` | `"VpnGw2"` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | ID of the gateway subnet | `string` | n/a | yes |
 | <a name="input_type"></a> [type](#input\_type) | The type of the Virtual Network Gateway. Defaults to `Vpn` | `string` | `"Vpn"` | no |
-| <a name="input_vpn_auth_types"></a> [vpn\_auth\_types](#input\_vpn\_auth\_types) | List of the vpn authentication types for the virtual network gateway. Defaults to `['AAD']` | `list` | <pre>[<br>  "AAD"<br>]</pre> | no |
-| <a name="input_vpn_client_protocols"></a> [vpn\_client\_protocols](#input\_vpn\_client\_protocols) | List of the protocols supported by the vpn client. Defaults to `['OpenVPN']` | `list` | <pre>[<br>  "OpenVPN"<br>]</pre> | no |
+| <a name="input_vpn_auth_types"></a> [vpn\_auth\_types](#input\_vpn\_auth\_types) | List of the vpn authentication types for the virtual network gateway. Defaults to `['AAD']` | `list(string)` | <pre>[<br>  "AAD"<br>]</pre> | no |
+| <a name="input_vpn_client_protocols"></a> [vpn\_client\_protocols](#input\_vpn\_client\_protocols) | List of the protocols supported by the vpn client. Defaults to `['OpenVPN']` | `list(string)` | <pre>[<br>  "OpenVPN"<br>]</pre> | no |
 | <a name="input_vpn_type"></a> [vpn\_type](#input\_vpn\_type) | The routing type of the Virtual Network Gateway. Defaults to `RouteBased` | `string` | `"RouteBased"` | no |
 
 ## Outputs
@@ -48,4 +51,68 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the VPN gateway |
 | <a name="output_name"></a> [name](#output\_name) | The name of the VPN gateway |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the VPN gateway |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "virtual_network_with_gateway" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network-with-gateway"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.2.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.2.0.0/25"
+      ]
+    }
+    GatewaySubnet = {
+      address_prefixes = [
+        "10.2.0.128/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+variable "azure_active_directory_authentication" {
+  description = "The virtual private network's AAD credentials"
+  sensitive   = true
+  type        = object({
+    audience = string
+    issuer   = string
+    tenant   = string
+  })
+}
+
+module "virtual_private_network_gateway" {
+  source = "../modules/virtual_private_network_gateway"
+
+  name                = "${local.environment_prefix}-vpn"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_prefixes                      = ["10.2.0.0/24"]
+  azure_active_directory_authentication = var.azure_active_directory_authentication
+  subnet_id                             = module.virtual_network_with_gateway.subnets.GatewaySubnet.id
+
+  depends_on = [module.virtual_network_with_gateway]
+}
+```
 <!-- END_TF_DOCS -->

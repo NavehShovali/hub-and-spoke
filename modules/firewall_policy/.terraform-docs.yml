@@ -1,0 +1,28 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Firewall policy
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/resource_group.tf" }}
+  
+  {{ include "../../examples/firewall_policy.tf" }}
+  ```

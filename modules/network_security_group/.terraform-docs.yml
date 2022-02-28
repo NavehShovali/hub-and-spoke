@@ -1,0 +1,30 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Network security group
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/resource_group.tf" }}
+  
+  {{ include "../../examples/vnet1.tf" }}
+  
+  {{ include "../../examples/network_security_group.tf" }}
+  ```

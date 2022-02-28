@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Network security group
+
 ## Requirements
 
 | Name | Version |
@@ -40,4 +42,67 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the network security group |
 | <a name="output_name"></a> [name](#output\_name) | The name of the network security group |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the network security group |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "virtual_network1" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network1"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.0.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.0.0.0/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+locals {
+  security_rules = {
+    allow-ssh-to-default = {
+      access                     = "Allow"
+      direction                  = "Inbound"
+      priority                   = 300
+      protocol                   = "TCP"
+      source_port_range          = "*"
+      destination_port_range     = "22"
+      source_address_prefix      = "10.0.0.0/16"
+      destination_address_prefix = "10.0.0.0/25"
+    }
+  }
+}
+
+module "example_network_security_group" {
+  source = "../modules/network_security_group"
+
+  name                = "${local.environment_prefix}-network-security-group"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  security_rules = local.security_rules
+  subnet_id      = module.virtual_network1.subnets.default.id
+
+  depends_on = [module.virtual_network1]
+}
+```
 <!-- END_TF_DOCS -->

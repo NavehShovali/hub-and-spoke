@@ -1,0 +1,32 @@
+formatter: "markdown"
+
+recursive:
+  enabled: true
+  path: modules
+
+content: |-
+  # Firewall
+  
+  {{ .Requirements }}
+  
+  {{ .Providers }}
+  
+  {{ .Modules }}
+  
+  {{ .Resources }}
+  
+  {{ .Inputs }}
+  
+  {{ .Outputs }}
+  
+  ## Example
+  
+  ```hcl
+  {{ include "../../examples/resource_group.tf" }}
+  
+  {{ include "../../examples/log_analytics_workspace.tf" }}
+  
+  {{ include "../../examples/vnet_with_firewall.tf" }}
+  
+  {{ include "../../examples/firewall.tf" }}
+  ```

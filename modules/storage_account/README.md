@@ -1,4 +1,6 @@
 <!-- BEGIN_TF_DOCS -->
+# Storage account
+
 ## Requirements
 
 | Name | Version |
@@ -39,4 +41,49 @@ No modules.
 | <a name="output_id"></a> [id](#output\_id) | The ID of the storage account |
 | <a name="output_name"></a> [name](#output\_name) | The name of the storage account |
 | <a name="output_object"></a> [object](#output\_object) | The data object of the storage account |
+
+## Example
+
+```hcl
+locals {
+  environment_prefix = "example"
+  location           = "westeurope"
+}
+
+resource "azurerm_resource_group" "example" {
+  location = local.location
+  name     = "${local.environment_prefix}-rg"
+}
+
+module "virtual_network1" {
+  source = "../modules/virtual_network"
+
+  name                = "${local.environment_prefix}-virtual-network1"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  address_space = ["10.0.0.0/16"]
+  subnets       = {
+    default = {
+      address_prefixes = [
+        "10.0.0.0/25"
+      ]
+    }
+  }
+
+  log_analytics_workspace_id = module.log_analytics_workspace.id
+
+  depends_on = [azurerm_resource_group.example, module.log_analytics_workspace]
+}
+
+module "storage_account" {
+  source = "../modules/storage_account"
+
+  name                = "${local.environment_prefix}-storage-account"
+  location            = local.location
+  resource_group_name = azurerm_resource_group.example.name
+
+  depends_on = [azurerm_resource_group.example]
+}
+```
 <!-- END_TF_DOCS -->
